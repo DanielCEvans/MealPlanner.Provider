@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealPlanner.Provider.Endpoint", "MealPlanner.Provider.Endpoint\MealPlanner.Provider.Endpoint.csproj", "{FD017013-0A86-4B8E-B64B-95E9AC091F33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealPlanner.Provider.Persistence", "MealPlanner.Provider.Persistence\MealPlanner.Provider.Persistence.csproj", "{086753FA-8E43-4069-87DB-8AC8CF335789}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD017013-0A86-4B8E-B64B-95E9AC091F33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD017013-0A86-4B8E-B64B-95E9AC091F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD017013-0A86-4B8E-B64B-95E9AC091F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD017013-0A86-4B8E-B64B-95E9AC091F33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{086753FA-8E43-4069-87DB-8AC8CF335789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{086753FA-8E43-4069-87DB-8AC8CF335789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{086753FA-8E43-4069-87DB-8AC8CF335789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{086753FA-8E43-4069-87DB-8AC8CF335789}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
