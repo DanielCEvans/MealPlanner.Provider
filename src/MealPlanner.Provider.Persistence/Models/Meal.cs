@@ -10,9 +10,13 @@ public class Meal
     [Column("meal_id")]
     public int MealId { get; set; }
     
+    [Required]
+    [MaxLength(100)]
     [Column("meal_name")]
     public string MealName { get; set; }
     
     [Column("meal_type")]
     public string MealType { get; set; }
+    
+    public ICollection<MealIngredients> MealIngredients { get; set; }
 }

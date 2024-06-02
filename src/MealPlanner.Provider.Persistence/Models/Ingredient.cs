@@ -10,7 +10,11 @@ public class Ingredient
     [Column("ingredient_id")]
     public int IngredientId { get; set; }
     
+    [Required]
+    [MaxLength(100)]
     [Column("ingredient_name")]
     public string IngredientName { get; set; }
+    
+    public ICollection<MealIngredients> MealIngredients { get; set; }
     
 }

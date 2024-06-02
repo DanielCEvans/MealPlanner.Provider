@@ -2,6 +2,7 @@
 using MealPlanner.Provider.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MealPlanner.Provider.Persistence.Migrations
 {
     [DbContext(typeof(MealPlannerContext))]
-    partial class MealPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20240602105301_AddForeignKeys")]
+    partial class AddForeignKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,8 +35,7 @@ namespace MealPlanner.Provider.Persistence.Migrations
 
                     b.Property<string>("IngredientName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("ingredient_name");
 
                     b.HasKey("IngredientId");
@@ -52,8 +54,7 @@ namespace MealPlanner.Provider.Persistence.Migrations
 
                     b.Property<string>("MealName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("meal_name");
 
                     b.Property<string>("MealType")
@@ -68,53 +69,22 @@ namespace MealPlanner.Provider.Persistence.Migrations
 
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.MealIngredients", b =>
                 {
-                    b.Property<int>("MealId")
-                        .HasColumnType("integer")
-                        .HasColumnName("meal_id");
+                    b.Property<string>("Meal")
+                        .HasColumnType("text")
+                        .HasColumnName("meal");
 
-                    b.Property<int>("IngredientId")
-                        .HasColumnType("integer")
-                        .HasColumnName("ingredient_id");
+                    b.Property<string>("Ingredient")
+                        .HasColumnType("text")
+                        .HasColumnName("ingredient");
 
                     b.Property<string>("IngredientAmount")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("ingredient_amount");
 
-                    b.HasKey("MealId", "IngredientId");
-
-                    b.HasIndex("IngredientId");
+                    b.HasKey("Meal", "Ingredient");
 
                     b.ToTable("meal_ingredients");
-                });
-
-            modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.MealIngredients", b =>
-                {
-                    b.HasOne("MealPlanner.Provider.Persistence.Models.Ingredient", "Ingredient")
-                        .WithMany("MealIngredients")
-                        .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MealPlanner.Provider.Persistence.Models.Meal", "Meal")
-                        .WithMany("MealIngredients")
-                        .HasForeignKey("MealId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ingredient");
-
-                    b.Navigation("Meal");
-                });
-
-            modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.Ingredient", b =>
-                {
-                    b.Navigation("MealIngredients");
-                });
-
-            modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.Meal", b =>
-                {
-                    b.Navigation("MealIngredients");
                 });
 #pragma warning restore 612, 618
         }
