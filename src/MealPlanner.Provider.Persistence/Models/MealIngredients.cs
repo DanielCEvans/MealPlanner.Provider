@@ -17,6 +17,6 @@ public class MealIngredients
     public string Ingredient;
     
     [Column("ingredient_amount")]
-    public string IngredientAmount;
+    public string IngredientAmount { get; set; }
 
 }
