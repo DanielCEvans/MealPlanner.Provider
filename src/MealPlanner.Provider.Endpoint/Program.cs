@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IMealPlannerService, MealPlannerService>();
 builder.Services.AddScoped<IMealRepository, MealRepository>();
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IMealIngredientRepository, MealIngredientRepository>();
 
 builder.Services.AddDbContext<MealPlannerContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))

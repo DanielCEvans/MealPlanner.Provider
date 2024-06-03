@@ -8,11 +8,16 @@ public class MealPlannerService : IMealPlannerService
 {
     private readonly IMealRepository _mealRepository;
     private readonly IIngredientRepository _ingredientRepository;
+    private readonly IMealIngredientRepository _mealIngredientRepository;
 
-    public MealPlannerService(IMealRepository mealRepository, IIngredientRepository ingredientRepository)
+    public MealPlannerService(
+        IMealRepository mealRepository, 
+        IIngredientRepository ingredientRepository, 
+        IMealIngredientRepository mealIngredientRepository)
     {
         _mealRepository = mealRepository;
         _ingredientRepository = ingredientRepository;
+        _mealIngredientRepository = mealIngredientRepository;
     }
     public List<Meal> GetAllMeals()
     {
@@ -22,5 +27,10 @@ public class MealPlannerService : IMealPlannerService
     public List<Ingredient> GetAllIngredients()
     {
         return _ingredientRepository.GetAllIngredients();
+    }
+
+    public List<MealIngredients> GetMealIngredients(int id)
+    {
+        return _mealIngredientRepository.GetMealIngredients(id);
     }
 }

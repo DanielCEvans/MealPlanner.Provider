@@ -6,4 +6,5 @@ public interface IMealPlannerService
 {
     List<Meal> GetAllMeals();
     List<Ingredient> GetAllIngredients();
+    List<MealIngredients> GetMealIngredients(int id);
 }
