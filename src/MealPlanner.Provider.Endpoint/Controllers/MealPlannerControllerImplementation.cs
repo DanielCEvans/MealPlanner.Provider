@@ -15,8 +15,16 @@ public class MealPlannerControllerImplementation : ControllerBase
     }
 
     [HttpGet]
-    public List<Meal> GetAllMeals ()
+    [Route("meals")]
+    public List<Meal> GetAllMeals()
     {
         return _mealPlannerService.GetAllMeals();
+    }
+    
+    [HttpGet]
+    [Route("ingredients")]
+    public List<Ingredient> GetAllIngredients()
+    {
+        return _mealPlannerService.GetAllIngredients();
     }
 }
