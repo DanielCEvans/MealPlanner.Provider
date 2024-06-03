@@ -16,4 +16,10 @@ public class MealIngredientRepository : IMealIngredientRepository
         List<MealIngredients> mealIngredients = _dbContext.MealIngredients.Where(mi => mi.MealId == id).ToList();
         return mealIngredients;
     }
+
+    public List<MealIngredients> GetMealIngredients(List<int> mealIds)
+    {
+        List<MealIngredients> mealIngredients = _dbContext.MealIngredients.Where(mi => mealIds.Contains(mi.MealId)).ToList();
+        return mealIngredients;
+    }
 }

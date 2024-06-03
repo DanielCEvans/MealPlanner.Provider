@@ -33,4 +33,9 @@ public class MealPlannerService : IMealPlannerService
     {
         return _mealIngredientRepository.GetMealIngredients(id);
     }
+
+    public List<MealIngredients> GetMeals(List<int> mealIds)
+    {
+        return _mealIngredientRepository.GetMealIngredients(mealIds);
+    }
 }
