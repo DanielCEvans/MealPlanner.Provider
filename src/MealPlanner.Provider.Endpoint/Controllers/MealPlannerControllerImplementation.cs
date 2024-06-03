@@ -1,4 +1,5 @@
-using MealPlanner.Provider.Persistence;
+using MealPlanner.Provider.Endpoint.Services.Interfaces;
+using MealPlanner.Provider.Persistence.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealPlanner.Provider.Endpoint.Controllers;
@@ -7,16 +8,15 @@ namespace MealPlanner.Provider.Endpoint.Controllers;
 [Route("api/")]
 public class MealPlannerControllerImplementation : ControllerBase
 {
-    private readonly MealPlannerContext _dbContext;
-    
-    public MealPlannerControllerImplementation(MealPlannerContext dbContext)
+    private readonly IMealPlannerService _mealPlannerService;
+    public MealPlannerControllerImplementation(IMealPlannerService mealPlannerService)
     {
-        _dbContext = dbContext;
+        _mealPlannerService = mealPlannerService;
     }
 
     [HttpGet]
-    public string HelloWorld()
+    public List<Meal> GetAllMeals ()
     {
-        return "hello world";
+        return _mealPlannerService.GetAllMeals();
     }
 }

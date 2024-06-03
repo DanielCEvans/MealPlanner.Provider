@@ -1,4 +1,7 @@
+using MealPlanner.Provider.Endpoint.Services;
+using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence;
+using MealPlanner.Provider.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers(); 
+builder.Services.AddControllers();
+
+builder.Services.AddScoped<IMealPlannerService, MealPlannerService>();
+builder.Services.AddScoped<IMealRepository, MealRepository>();
+
 builder.Services.AddDbContext<MealPlannerContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
