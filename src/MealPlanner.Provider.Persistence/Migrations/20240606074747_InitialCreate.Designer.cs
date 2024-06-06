@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MealPlanner.Provider.Persistence.Migrations
 {
     [DbContext(typeof(MealPlannerContext))]
-    [Migration("20240606072519_AddMeasurementAmountColumn")]
-    partial class AddMeasurementAmountColumn
+    [Migration("20240606074747_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
