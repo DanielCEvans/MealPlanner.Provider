@@ -34,23 +34,23 @@ public class MealPlannerService : IMealPlannerService
         return _mealIngredientRepository.GetMealIngredients(id);
     }
 
-    public List<string> GetIngredientsList(List<int> mealIds)
+    public Dictionary<string, int> GetIngredientsList(List<int> mealIds)
     {
         List<MealIngredients> allMealIngredients = _mealIngredientRepository.GetMealIngredients(mealIds);
         
-        Dictionary<string, List<string>> ingredientsList = new Dictionary<string, List<string>>();
+        Dictionary<string, int> ingredientsList = new Dictionary<string, int>();
 
         foreach (MealIngredients mealIngredient in allMealIngredients)
         {
             if (ingredientsList.ContainsKey(mealIngredient.IngredientName))
             {
-                ingredientsList[mealIngredient.IngredientName].Add(mealIngredient.IngredientAmount);
+                ingredientsList[mealIngredient.IngredientName] += (mealIngredient.IngredientAmount);
             }
             else
             {
-                ingredientsList.Add(mealIngredient.IngredientName, new List<string> {mealIngredient.IngredientAmount});
+                ingredientsList.Add(mealIngredient.IngredientName, mealIngredient.IngredientAmount);
             }
         }
-        return ingredientsList.Values.SelectMany(list => list).ToList();
+        return ingredientsList;
     }
 }

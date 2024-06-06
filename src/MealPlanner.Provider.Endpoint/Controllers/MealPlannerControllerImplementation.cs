@@ -31,7 +31,7 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpPost]
     [Route("meals")]
-    public List<string> GetIngredientsList([FromBody] MealIdsRequest request)
+    public Dictionary<string, int> GetIngredientsList([FromBody] MealIdsRequest request)
     {
         return _mealPlannerService.GetIngredientsList(request.MealIds);
     }

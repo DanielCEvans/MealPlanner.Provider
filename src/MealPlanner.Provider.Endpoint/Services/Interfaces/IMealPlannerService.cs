@@ -7,5 +7,5 @@ public interface IMealPlannerService
     List<Meal> GetAllMeals();
     List<Ingredient> GetAllIngredients();
     List<MealIngredients> GetMealIngredients(int id);
-    List<string> GetIngredientsList(List<int> mealIds);
+    Dictionary<string, int> GetIngredientsList(List<int> mealIds);
 }
