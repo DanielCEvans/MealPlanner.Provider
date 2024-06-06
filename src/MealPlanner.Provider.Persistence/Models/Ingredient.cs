@@ -15,6 +15,10 @@ public class Ingredient
     [Column("ingredient_name")]
     public string IngredientName { get; set; }
     
+    [Required]
+    [Column("measurement_unit")]
+    public string MeasurementUnit { get; set; }
+    
     public ICollection<MealIngredients> MealIngredients { get; set; }
     
 }

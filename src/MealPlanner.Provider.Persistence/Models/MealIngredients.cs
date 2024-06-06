@@ -15,10 +15,13 @@ public class MealIngredients
     [Key] 
     [Column("ingredient_name")] 
     public string IngredientName { get; set; }
-
+    
     [Required]
     [Column("ingredient_amount")]
-    public string IngredientAmount { get; set; }
+    public int IngredientAmount { get; set; }
+    
+    [Column("measurement_unit")]
+    public string MeasurementUnit { get; set; }
 
     [Column("meal_id")]
     [ForeignKey("meal_id")]
