@@ -13,7 +13,8 @@ public class MealPlannerService : IMealPlannerService
     public MealPlannerService(
         IMealRepository mealRepository, 
         IIngredientRepository ingredientRepository, 
-        IMealIngredientRepository mealIngredientRepository)
+        IMealIngredientRepository mealIngredientRepository
+        )
     {
         _mealRepository = mealRepository;
         _ingredientRepository = ingredientRepository;
@@ -34,23 +35,10 @@ public class MealPlannerService : IMealPlannerService
         return _mealIngredientRepository.GetMealIngredients(id);
     }
 
-    public Dictionary<string, int> GetIngredientsList(List<int> mealIds)
+    public List<IngredientAndMealIngredient> GetIngredientsList(List<int> mealIds)
     {
-        List<MealIngredients> allMealIngredients = _mealIngredientRepository.GetMealIngredients(mealIds);
-        
-        Dictionary<string, int> ingredientsList = new Dictionary<string, int>();
+        List<IngredientAndMealIngredient> mealIngredients = _mealIngredientRepository.GetMealIngredients(mealIds);
 
-        foreach (MealIngredients mealIngredient in allMealIngredients)
-        {
-            if (ingredientsList.ContainsKey(mealIngredient.IngredientName))
-            {
-                ingredientsList[mealIngredient.IngredientName] += (mealIngredient.MealIngredientAmount);
-            }
-            else
-            {
-                ingredientsList.Add(mealIngredient.IngredientName, mealIngredient.MealIngredientAmount);
-            }
-        }
-        return ingredientsList;
+        return mealIngredients;
     }
 }

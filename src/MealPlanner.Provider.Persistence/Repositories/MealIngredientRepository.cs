@@ -16,13 +16,19 @@ public class MealIngredientRepository : IMealIngredientRepository
         List<MealIngredients> mealIngredients = _dbContext.MealIngredients.Where(mi => mi.MealId == id).ToList();
         return mealIngredients;
     }
-
-    public List<MealIngredients> GetMealIngredients(List<int> mealIds)
+    
+    public List<IngredientAndMealIngredient> GetMealIngredients(List<int> mealIds)
     {
-        // Is this where we need to do a DTO? getting data from the database in the service layer
-        // maybe in the service layer?
-        // this method will return all of th data -> it is being mapped 
-        List<MealIngredients> mealIngredients = _dbContext.MealIngredients.Where(mi => mealIds.Contains(mi.MealId)).ToList();
-        return mealIngredients;
+        var query = from mealIngredient in _dbContext.MealIngredients
+            join ingredient in _dbContext.Ingredients on mealIngredient.IngredientId equals ingredient.IngredientId
+            where mealIds.Contains(mealIngredient.MealId)
+            select new IngredientAndMealIngredient()
+            {
+                IngredientName = ingredient.IngredientName,
+                KitchenIngredientAmount = ingredient.IngredientAmount,
+                MealIngredientAmount = mealIngredient.MealIngredientAmount,
+                MeasurementUnit = ingredient.MeasurementUnit
+            };
+        return query.ToList();
     }
 }

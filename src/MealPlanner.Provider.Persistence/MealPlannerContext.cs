@@ -12,6 +12,6 @@ public class MealPlannerContext : DbContext
     public DbSet<Meal> Meals { get; set; }
     public DbSet<Ingredient> Ingredients { get; set; }
     public DbSet<MealIngredients> MealIngredients { get; set; }
-    
+        
 }
 

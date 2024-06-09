@@ -19,4 +19,8 @@
       <ProjectReference Include="..\MealPlanner.Provider.Persistence\MealPlanner.Provider.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\DTOs\" />
+    </ItemGroup>
+
 </Project>
