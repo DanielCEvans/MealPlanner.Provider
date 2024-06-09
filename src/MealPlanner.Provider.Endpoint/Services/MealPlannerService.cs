@@ -44,11 +44,11 @@ public class MealPlannerService : IMealPlannerService
         {
             if (ingredientsList.ContainsKey(mealIngredient.IngredientName))
             {
-                ingredientsList[mealIngredient.IngredientName] += (mealIngredient.IngredientAmount);
+                ingredientsList[mealIngredient.IngredientName] += (mealIngredient.MealIngredientAmount);
             }
             else
             {
-                ingredientsList.Add(mealIngredient.IngredientName, mealIngredient.IngredientAmount);
+                ingredientsList.Add(mealIngredient.IngredientName, mealIngredient.MealIngredientAmount);
             }
         }
         return ingredientsList;

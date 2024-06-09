@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MealPlanner.Provider.Persistence.Migrations
 {
     [DbContext(typeof(MealPlannerContext))]
-    [Migration("20240606074747_InitialCreate")]
+    [Migration("20240609011648_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -44,9 +44,32 @@ namespace MealPlanner.Provider.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("measurement_unit");
 
+                    b.Property<int>("inventory_id")
+                        .HasColumnType("integer");
+
                     b.HasKey("IngredientId");
 
+                    b.HasIndex("inventory_id");
+
                     b.ToTable("ingredient");
+                });
+
+            modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.Inventory", b =>
+                {
+                    b.Property<int>("InventoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("inventory_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InventoryId"));
+
+                    b.Property<int>("InventoryAmount")
+                        .HasColumnType("integer")
+                        .HasColumnName("inventory_amount");
+
+                    b.HasKey("InventoryId");
+
+                    b.ToTable("inventory");
                 });
 
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.Meal", b =>
@@ -110,6 +133,17 @@ namespace MealPlanner.Provider.Persistence.Migrations
                     b.ToTable("meal_ingredients");
                 });
 
+            modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.Ingredient", b =>
+                {
+                    b.HasOne("MealPlanner.Provider.Persistence.Models.Inventory", "Inventory")
+                        .WithMany("Ingredients")
+                        .HasForeignKey("inventory_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Inventory");
+                });
+
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.MealIngredients", b =>
                 {
                     b.HasOne("MealPlanner.Provider.Persistence.Models.Ingredient", "Ingredient")
@@ -132,6 +166,11 @@ namespace MealPlanner.Provider.Persistence.Migrations
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.Ingredient", b =>
                 {
                     b.Navigation("MealIngredients");
+                });
+
+            modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.Inventory", b =>
+                {
+                    b.Navigation("Ingredients");
                 });
 
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.Meal", b =>

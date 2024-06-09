@@ -19,6 +19,8 @@ public class Ingredient
     [Column("measurement_unit")]
     public string MeasurementUnit { get; set; }
     
-    public ICollection<MealIngredients> MealIngredients { get; set; }
+    [Column("ingredient_amount")]
+    public int IngredientAmount { get; set; }
     
+    public ICollection<MealIngredients> MealIngredients { get; set; }
 }

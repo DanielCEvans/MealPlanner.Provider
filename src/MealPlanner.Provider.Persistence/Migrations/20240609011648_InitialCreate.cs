@@ -12,17 +12,16 @@ namespace MealPlanner.Provider.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ingredient",
+                name: "inventory",
                 columns: table => new
                 {
-                    ingredient_id = table.Column<int>(type: "integer", nullable: false)
+                    inventory_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ingredient_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    measurement_unit = table.Column<string>(type: "text", nullable: false)
+                    inventory_amount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ingredient", x => x.ingredient_id);
+                    table.PrimaryKey("PK_inventory", x => x.inventory_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -37,6 +36,27 @@ namespace MealPlanner.Provider.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_meal", x => x.meal_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ingredient",
+                columns: table => new
+                {
+                    ingredient_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ingredient_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    measurement_unit = table.Column<string>(type: "text", nullable: false),
+                    inventory_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ingredient", x => x.ingredient_id);
+                    table.ForeignKey(
+                        name: "FK_ingredient_inventory_inventory_id",
+                        column: x => x.inventory_id,
+                        principalTable: "inventory",
+                        principalColumn: "inventory_id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,6 +88,11 @@ namespace MealPlanner.Provider.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ingredient_inventory_id",
+                table: "ingredient",
+                column: "inventory_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_meal_ingredients_ingredient_id",
                 table: "meal_ingredients",
                 column: "ingredient_id");
@@ -89,6 +114,9 @@ namespace MealPlanner.Provider.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "meal");
+
+            migrationBuilder.DropTable(
+                name: "inventory");
         }
     }
 }
