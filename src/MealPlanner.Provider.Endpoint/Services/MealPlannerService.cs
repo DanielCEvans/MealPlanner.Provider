@@ -64,9 +64,6 @@ public class MealPlannerService : IMealPlannerService
             }
         }
 
-        // what about updating the ingredient amount in the database after generating the ingredients list?
-        // probably should occur after cooking all of the meals?
-        
         return finalIngredientsList;
     }
 }

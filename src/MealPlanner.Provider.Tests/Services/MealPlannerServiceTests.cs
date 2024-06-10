@@ -17,7 +17,7 @@ public class MealPlannerServiceTests
     private readonly IMealIngredientRepository _mealIngredientRepository;
 
     private List<IngredientAndMealIngredient> _result;
-    public List<int> MealIds;
+    private List<int> MealIds;
 
     public MealPlannerServiceTests()
     {
@@ -40,11 +40,51 @@ public class MealPlannerServiceTests
             .Then(x => ThenItShouldReturnAnEmptyList())
             .BDDfy();
     }
+    
+    [Fact]
+    public void ItShouldReturnOnlyTheIngredientsThatAreRequried()
+    {
+        this.Given(x => GivenAListOfMealIds())
+            .And(x => GivenSomeMealIngredientsAreGreaterThanKitchenIngredients())
+            .When(x => WhenGetIngredientsListIsCalled())
+            .Then(x => ThenItShouldReturnTheIngredientsList())
+            .BDDfy();
+    }
 
     private void GivenAListOfMealIds()
     {
-        MealIds = new List<int>{1,2,3};
+        MealIds = [1, 2, 3];
     }
+    
+    private void GivenSomeMealIngredientsAreGreaterThanKitchenIngredients()
+    {
+        List<IngredientAndMealIngredient> ingredients =
+        [
+            new()
+            {
+                IngredientName = "some ingredient",
+                MealIngredientAmount = 100,
+                KitchenIngredientAmount = 50,
+            },
+
+            new()
+            {
+                IngredientName = "another ingredient",
+                MealIngredientAmount = 20,
+                KitchenIngredientAmount = 50,
+            },
+
+            new()
+            {
+                IngredientName = "some ingredient",
+                MealIngredientAmount = 20,
+                KitchenIngredientAmount = 50,
+            }
+        ];
+
+        _mealIngredientRepository.GetMealIngredients(MealIds).Returns(ingredients);
+    }
+    
     private void GivenAllMealIngredientsAreLessThanKitchenIngredients()
     {
         List<IngredientAndMealIngredient> ingredients =
@@ -53,24 +93,21 @@ public class MealPlannerServiceTests
             {
                 IngredientName = "some ingredient",
                 MealIngredientAmount = 10,
-                KitchenIngredientAmount = 50,
-                MeasurementUnit = "some unit"
+                KitchenIngredientAmount = 50
             },
 
             new()
             {
                 IngredientName = "another ingredient",
                 MealIngredientAmount = 20,
-                KitchenIngredientAmount = 50,
-                MeasurementUnit = "some unit"
+                KitchenIngredientAmount = 50
             },
 
             new()
             {
                 IngredientName = "some ingredient",
                 MealIngredientAmount = 20,
-                KitchenIngredientAmount = 50,
-                MeasurementUnit = "some unit"
+                KitchenIngredientAmount = 50
             }
         ];
 
@@ -81,6 +118,12 @@ public class MealPlannerServiceTests
         _result = _subject.GetIngredientsList(MealIds);
     }
 
+    private void ThenItShouldReturnTheIngredientsList()
+    {
+        _result.ShouldNotBeEmpty();
+        _result.Count.ShouldBe(1);
+    }
+    
     private void ThenItShouldReturnAnEmptyList()
     {
         _result.ShouldBeEmpty();
