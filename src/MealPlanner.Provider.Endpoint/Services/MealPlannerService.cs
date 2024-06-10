@@ -38,7 +38,35 @@ public class MealPlannerService : IMealPlannerService
     public List<IngredientAndMealIngredient> GetIngredientsList(List<int> mealIds)
     {
         List<IngredientAndMealIngredient> mealIngredients = _mealIngredientRepository.GetMealIngredients(mealIds);
+        
+        Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary = new Dictionary<string, IngredientAndMealIngredient>();
+         
+        foreach (IngredientAndMealIngredient mealIngredient in mealIngredients)
+        {
+            if (ingredientsListAsDictionary.ContainsKey(mealIngredient.IngredientName))
+            {
+                ingredientsListAsDictionary[mealIngredient.IngredientName].MealIngredientAmount +=
+                    mealIngredient.MealIngredientAmount;
+            }
+            else
+            {
+                ingredientsListAsDictionary.Add(mealIngredient.IngredientName, mealIngredient);
+            }
+        }
 
-        return mealIngredients;
+        List<IngredientAndMealIngredient> finalIngredientsList = new List<IngredientAndMealIngredient>();
+
+        foreach (var ingredient in ingredientsListAsDictionary.Values)
+        {
+            if (ingredient.MealIngredientAmount > ingredient.KitchenIngredientAmount)
+            {
+                finalIngredientsList.Add(ingredient);
+            }
+        }
+
+        // what about updating the ingredient amount in the database after generating the ingredients list?
+        // probably should occur after cooking all of the meals?
+        
+        return finalIngredientsList;
     }
 }
