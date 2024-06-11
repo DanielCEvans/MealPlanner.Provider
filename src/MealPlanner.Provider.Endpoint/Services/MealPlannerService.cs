@@ -38,7 +38,36 @@ public class MealPlannerService : IMealPlannerService
     public List<IngredientAndMealIngredient> GetIngredientsList(List<int> mealIds)
     {
         List<IngredientAndMealIngredient> mealIngredients = _mealIngredientRepository.GetMealIngredients(mealIds);
+
+        Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary =
+            GetIngredientsListAsDictionary(mealIngredients);
+
+        List<IngredientAndMealIngredient> finalIngredientsList = GetFinalIngredientsList(ingredientsListAsDictionary);
+
+        // TODO: implement logic to return the required ingredient amount
+        // e.g. if 1000 grams in kitchen, and meal required 1500, 
+        // list should display 500 grams requried
         
+        return finalIngredientsList;
+    }
+
+    private List<IngredientAndMealIngredient> GetFinalIngredientsList(Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary)
+    {
+        List<IngredientAndMealIngredient> finalIngredientsList = new List<IngredientAndMealIngredient>();
+
+        foreach (var ingredient in ingredientsListAsDictionary.Values)
+        {
+            if (ingredient.MealIngredientAmount > ingredient.KitchenIngredientAmount)
+            {
+                finalIngredientsList.Add(ingredient);
+            }
+        }
+        return finalIngredientsList;
+    }
+
+    private Dictionary<string, IngredientAndMealIngredient> GetIngredientsListAsDictionary(
+        List<IngredientAndMealIngredient> mealIngredients)
+    {
         Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary = new Dictionary<string, IngredientAndMealIngredient>();
          
         foreach (IngredientAndMealIngredient mealIngredient in mealIngredients)
@@ -53,17 +82,6 @@ public class MealPlannerService : IMealPlannerService
                 ingredientsListAsDictionary.Add(mealIngredient.IngredientName, mealIngredient);
             }
         }
-
-        List<IngredientAndMealIngredient> finalIngredientsList = new List<IngredientAndMealIngredient>();
-
-        foreach (var ingredient in ingredientsListAsDictionary.Values)
-        {
-            if (ingredient.MealIngredientAmount > ingredient.KitchenIngredientAmount)
-            {
-                finalIngredientsList.Add(ingredient);
-            }
-        }
-
-        return finalIngredientsList;
+        return ingredientsListAsDictionary;
     }
 }
