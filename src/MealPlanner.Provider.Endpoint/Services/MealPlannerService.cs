@@ -1,3 +1,4 @@
+using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
@@ -35,14 +36,14 @@ public class MealPlannerService : IMealPlannerService
         return _mealIngredientRepository.GetMealIngredients(id);
     }
 
-    public List<IngredientAndMealIngredient> GetIngredientsList(List<int> mealIds)
+    public List<RequiredIngredient> GetIngredientsList(List<int> mealIds)
     {
         List<IngredientAndMealIngredient> mealIngredients = _mealIngredientRepository.GetMealIngredients(mealIds);
 
         Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary =
             GetIngredientsListAsDictionary(mealIngredients);
 
-        List<IngredientAndMealIngredient> finalIngredientsList = GetFinalIngredientsList(ingredientsListAsDictionary);
+        List<RequiredIngredient> finalIngredientsList = GetFinalIngredientsList(ingredientsListAsDictionary);
 
         // TODO: implement logic to return the required ingredient amount
         // e.g. if 1000 grams in kitchen, and meal required 1500, 
@@ -51,15 +52,23 @@ public class MealPlannerService : IMealPlannerService
         return finalIngredientsList;
     }
 
-    private List<IngredientAndMealIngredient> GetFinalIngredientsList(Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary)
+    private List<RequiredIngredient> GetFinalIngredientsList(Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary)
     {
-        List<IngredientAndMealIngredient> finalIngredientsList = new List<IngredientAndMealIngredient>();
+        List<RequiredIngredient> finalIngredientsList = new List<RequiredIngredient>();
 
         foreach (var ingredient in ingredientsListAsDictionary.Values)
         {
             if (ingredient.MealIngredientAmount > ingredient.KitchenIngredientAmount)
             {
-                finalIngredientsList.Add(ingredient);
+                RequiredIngredient requiredIngredient = new RequiredIngredient
+                {
+                    IngredientName = ingredient.IngredientName,
+                    RequiredIngredientAmount = ingredient.MealIngredientAmount - ingredient.KitchenIngredientAmount,
+                    MeasurementUnit = ingredient.MeasurementUnit
+                };
+                
+                finalIngredientsList.Add(requiredIngredient);
+                
             }
         }
         return finalIngredientsList;

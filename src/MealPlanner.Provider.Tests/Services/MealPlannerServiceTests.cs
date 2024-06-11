@@ -1,3 +1,4 @@
+using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Endpoint.Services;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
@@ -16,7 +17,7 @@ public class MealPlannerServiceTests
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IMealIngredientRepository _mealIngredientRepository;
 
-    private List<IngredientAndMealIngredient> _result;
+    private List<RequiredIngredient> _result;
     private List<int> MealIds;
 
     public MealPlannerServiceTests()
@@ -122,6 +123,7 @@ public class MealPlannerServiceTests
     {
         _result.ShouldNotBeEmpty();
         _result.Count.ShouldBe(1);
+        _result[0].RequiredIngredientAmount.ShouldBe(70);
     }
     
     private void ThenItShouldReturnAnEmptyList()

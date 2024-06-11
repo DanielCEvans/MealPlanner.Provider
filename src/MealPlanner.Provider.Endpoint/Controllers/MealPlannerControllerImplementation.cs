@@ -1,4 +1,5 @@
 using MealPlanner.Provider.Endpoint.Models;
+using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpPost]
     [Route("meals")]
-    public List<IngredientAndMealIngredient> GetIngredientsList([FromBody] MealIdsRequest request)
+    public List<RequiredIngredient> GetIngredientsList([FromBody] MealIdsRequest request)
     {
         return _mealPlannerService.GetIngredientsList(request.MealIds);
     }
