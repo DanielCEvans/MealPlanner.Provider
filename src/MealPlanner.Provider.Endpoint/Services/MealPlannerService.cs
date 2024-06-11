@@ -45,10 +45,6 @@ public class MealPlannerService : IMealPlannerService
 
         List<RequiredIngredient> finalIngredientsList = GetFinalIngredientsList(ingredientsListAsDictionary);
 
-        // TODO: implement logic to return the required ingredient amount
-        // e.g. if 1000 grams in kitchen, and meal required 1500, 
-        // list should display 500 grams requried
-        
         return finalIngredientsList;
     }
 
