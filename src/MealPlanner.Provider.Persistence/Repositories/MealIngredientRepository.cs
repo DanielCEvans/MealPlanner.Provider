@@ -27,7 +27,8 @@ public class MealIngredientRepository : IMealIngredientRepository
                 IngredientName = ingredient.IngredientName,
                 KitchenIngredientAmount = ingredient.IngredientAmount,
                 MealIngredientAmount = mealIngredient.MealIngredientAmount,
-                MeasurementUnit = ingredient.MeasurementUnit
+                MeasurementUnit = ingredient.MeasurementUnit,
+                IngredientCategory = ingredient.IngredientCategory
             };
         return query.ToList();
     }

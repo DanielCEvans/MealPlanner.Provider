@@ -60,14 +60,15 @@ public class MealPlannerService : IMealPlannerService
                 {
                     IngredientName = ingredient.IngredientName,
                     RequiredIngredientAmount = ingredient.MealIngredientAmount - ingredient.KitchenIngredientAmount,
-                    MeasurementUnit = ingredient.MeasurementUnit
+                    MeasurementUnit = ingredient.MeasurementUnit,
+                    IngredientCategory = ingredient.IngredientCategory
                 };
                 
                 finalIngredientsList.Add(requiredIngredient);
                 
             }
         }
-        return finalIngredientsList;
+        return finalIngredientsList.OrderBy(ingredient => ingredient.IngredientCategory).ToList();
     }
 
     private Dictionary<string, IngredientAndMealIngredient> GetIngredientsListAsDictionary(
