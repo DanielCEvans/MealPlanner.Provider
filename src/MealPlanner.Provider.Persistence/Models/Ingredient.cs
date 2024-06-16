@@ -1,21 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Provider.Persistence.Models;
 
 [Table("ingredient")]
+[PrimaryKey(nameof(IngredientName), nameof(MeasurementUnit))]
 public class Ingredient
 {
-    [Key] 
-    [Column("ingredient_id")] 
-    public int IngredientId { get; set; }
-
-    [Required]
-    [MaxLength(100)]
+    [Key]
     [Column("ingredient_name")]
     public string IngredientName { get; set; }
-
-    [Required]
+    
+    [Key]
     [Column("measurement_unit")]
     public string MeasurementUnit { get; set; }
 

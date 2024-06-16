@@ -36,9 +36,9 @@ public class MealPlannerService : IMealPlannerService
         return _mealIngredientRepository.GetMealIngredients(mealName);
     }
 
-    public List<RequiredIngredient> GetIngredientsList(List<int> mealIds)
+    public List<RequiredIngredient> GetIngredientsList(List<string> mealNames)
     {
-        List<IngredientAndMealIngredient> mealIngredients = _mealIngredientRepository.GetMealIngredients(mealIds);
+        List<IngredientAndMealIngredient> mealIngredients = _mealIngredientRepository.GetMealIngredients(mealNames);
 
         Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary =
             GetIngredientsListAsDictionary(mealIngredients);

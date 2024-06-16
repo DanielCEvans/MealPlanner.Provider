@@ -18,7 +18,7 @@ public class MealPlannerServiceTests
     private readonly IMealIngredientRepository _mealIngredientRepository;
 
     private List<RequiredIngredient> _result;
-    private List<int> MealIds;
+    private List<string> MealNames;
 
     public MealPlannerServiceTests()
     {
@@ -54,7 +54,7 @@ public class MealPlannerServiceTests
 
     private void GivenAListOfMealIds()
     {
-        MealIds = [1, 2, 3];
+        MealNames = ["meal one", "meal two", "meal three"];
     }
     
     private void GivenSomeMealIngredientsAreGreaterThanKitchenIngredients()
@@ -83,7 +83,7 @@ public class MealPlannerServiceTests
             }
         ];
 
-        _mealIngredientRepository.GetMealIngredients(MealIds).Returns(ingredients);
+        _mealIngredientRepository.GetMealIngredients(MealNames).Returns(ingredients);
     }
     
     private void GivenAllMealIngredientsAreLessThanKitchenIngredients()
@@ -112,11 +112,11 @@ public class MealPlannerServiceTests
             }
         ];
 
-        _mealIngredientRepository.GetMealIngredients(MealIds).Returns(ingredients);
+        _mealIngredientRepository.GetMealIngredients(MealNames).Returns(ingredients);
     }
     private void WhenGetIngredientsListIsCalled()
     {
-        _result = _subject.GetIngredientsList(MealIds);
+        _result = _subject.GetIngredientsList(MealNames);
     }
 
     private void ThenItShouldReturnTheIngredientsList()

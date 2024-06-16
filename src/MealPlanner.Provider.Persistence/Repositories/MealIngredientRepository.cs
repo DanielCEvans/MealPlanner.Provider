@@ -17,11 +17,12 @@ public class MealIngredientRepository : IMealIngredientRepository
         return mealIngredients;
     }
     
-    public List<IngredientAndMealIngredient> GetMealIngredients(List<int> mealIds)
+    public List<IngredientAndMealIngredient> GetMealIngredients(List<string> mealNames)
     {
         var query = from mealIngredient in _dbContext.MealIngredients
-            join ingredient in _dbContext.Ingredients on mealIngredient.IngredientId equals ingredient.IngredientId
-            // where mealIds.Contains(mealIngredient.MealId)
+            join ingredient in _dbContext.Ingredients on new {mealIngredient.IngredientName, mealIngredient.MeasurementUnit} 
+                equals new {ingredient.IngredientName, ingredient.MeasurementUnit}
+            where mealNames.Contains(mealIngredient.MealName)
             select new IngredientAndMealIngredient()
             {
                 IngredientName = ingredient.IngredientName,
