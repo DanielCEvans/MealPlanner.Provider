@@ -20,10 +20,6 @@ public class MealIngredients
     [Column("meal_ingredient_amount")]
     public int MealIngredientAmount { get; set; }
     
-    [Column("meal_id")]
-    [ForeignKey("meal_id")]
-    public int MealId { get; set; }
-
     [Column("ingredient_id")]
     [ForeignKey("ingredient_id")]
     public int IngredientId { get; set; }

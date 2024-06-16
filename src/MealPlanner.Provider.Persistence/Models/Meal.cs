@@ -7,11 +7,6 @@ namespace MealPlanner.Provider.Persistence.Models;
 public class Meal
 {
     [Key]
-    [Column("meal_id")]
-    public int MealId { get; set; }
-    
-    [Required]
-    [MaxLength(100)]
     [Column("meal_name")]
     public string MealName { get; set; }
     

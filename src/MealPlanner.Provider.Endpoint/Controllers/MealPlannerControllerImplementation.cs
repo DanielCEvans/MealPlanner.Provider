@@ -24,10 +24,10 @@ public class MealPlannerControllerImplementation : ControllerBase
     }
     
     [HttpGet]
-    [Route("meals/{id}")]
-    public List<MealIngredients> GetMeal(int id)
+    [Route("meals/{mealName}")]
+    public List<MealIngredients> GetMeal(string mealName)
     {
-        return _mealPlannerService.GetMealIngredients(id);
+        return _mealPlannerService.GetMealIngredients(mealName);
     }
 
     [HttpPost]

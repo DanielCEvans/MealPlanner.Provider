@@ -11,9 +11,9 @@ public class MealIngredientRepository : IMealIngredientRepository
         _dbContext = mealPlannerContext;
     }
 
-    public List<MealIngredients> GetMealIngredients(int id)
+    public List<MealIngredients> GetMealIngredients(string mealName)
     {
-        List<MealIngredients> mealIngredients = _dbContext.MealIngredients.Where(mi => mi.MealId == id).ToList();
+        List<MealIngredients> mealIngredients = _dbContext.MealIngredients.Where(mi => mi.MealName == mealName).ToList();
         return mealIngredients;
     }
     
@@ -21,7 +21,7 @@ public class MealIngredientRepository : IMealIngredientRepository
     {
         var query = from mealIngredient in _dbContext.MealIngredients
             join ingredient in _dbContext.Ingredients on mealIngredient.IngredientId equals ingredient.IngredientId
-            where mealIds.Contains(mealIngredient.MealId)
+            // where mealIds.Contains(mealIngredient.MealId)
             select new IngredientAndMealIngredient()
             {
                 IngredientName = ingredient.IngredientName,

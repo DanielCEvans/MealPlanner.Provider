@@ -31,9 +31,9 @@ public class MealPlannerService : IMealPlannerService
         return _ingredientRepository.GetAllIngredients();
     }
 
-    public List<MealIngredients> GetMealIngredients (int id)
+    public List<MealIngredients> GetMealIngredients (string mealName)
     {
-        return _mealIngredientRepository.GetMealIngredients(id);
+        return _mealIngredientRepository.GetMealIngredients(mealName);
     }
 
     public List<RequiredIngredient> GetIngredientsList(List<int> mealIds)
