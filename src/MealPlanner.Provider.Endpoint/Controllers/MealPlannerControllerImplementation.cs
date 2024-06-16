@@ -43,4 +43,11 @@ public class MealPlannerControllerImplementation : ControllerBase
     {
         return _mealPlannerService.GetAllIngredients();
     }
+
+    [HttpPost]
+    [Route("ingredients")]
+    public string AddIngredient([FromBody] AddIngredientRequest request)
+    {
+        return "Ingredient added :)";
+    }
 }
