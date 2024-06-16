@@ -32,7 +32,7 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpPost]
     [Route("meals")]
-    public List<RequiredIngredient> GetIngredientsList([FromBody] MealIdsRequest request)
+    public List<RequiredIngredient> GetIngredientsList([FromBody] GetIngredientsListRequest request)
     {
         return _mealPlannerService.GetIngredientsList(request.MealNames);
     }
@@ -46,8 +46,14 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpPost]
     [Route("ingredients")]
-    public string AddIngredient([FromBody] AddIngredientRequest request)
+    public ActionResult AddIngredient([FromBody] AddIngredientRequest request)
     {
-        return "Ingredient added :)";
+        // .Net automcatically handling bad requests that don't conform to the AddIngredientRequest model?
+        if (request == null)
+        {
+            return BadRequest("You didn't send anything");
+        }
+        
+        return Ok();
     }
 }
