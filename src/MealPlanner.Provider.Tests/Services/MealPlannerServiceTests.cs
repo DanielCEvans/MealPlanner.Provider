@@ -1,3 +1,4 @@
+using MealPlanner.Provider.Endpoint.Mappers;
 using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Endpoint.Services;
 using MealPlanner.Provider.Persistence.Models;
@@ -16,6 +17,7 @@ public class MealPlannerServiceTests
     private readonly IMealRepository _mealRepository;
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IMealIngredientRepository _mealIngredientRepository;
+    private readonly IIngredientMapper _ingredientMapper;
 
     private List<RequiredIngredient> _result;
     private List<string> MealNames;
@@ -25,11 +27,13 @@ public class MealPlannerServiceTests
         _mealRepository = Substitute.For<IMealRepository>();
         _ingredientRepository = Substitute.For<IIngredientRepository>();
         _mealIngredientRepository = Substitute.For<IMealIngredientRepository>();
+        _ingredientMapper = Substitute.For<IIngredientMapper>();
 
         _subject = new MealPlannerService(
             _mealRepository,
             _ingredientRepository,
-            _mealIngredientRepository);
+            _mealIngredientRepository,
+            _ingredientMapper);
     }
 
     [Fact]

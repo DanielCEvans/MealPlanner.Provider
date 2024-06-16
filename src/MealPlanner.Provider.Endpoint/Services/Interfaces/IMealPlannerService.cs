@@ -1,3 +1,4 @@
+using MealPlanner.Provider.Endpoint.Models;
 using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Persistence.Models;
 
@@ -9,4 +10,6 @@ public interface IMealPlannerService
     List<Ingredient> GetAllIngredients();
     List<MealIngredients> GetMealIngredients(string mealName);
     List<RequiredIngredient> GetIngredientsList(List<string> mealNames);
+
+    void AddIngredient(AddIngredientRequest ingredientRequest);
 }

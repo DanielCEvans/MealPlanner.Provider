@@ -1,3 +1,4 @@
+using MealPlanner.Provider.Endpoint.Mappers;
 using MealPlanner.Provider.Endpoint.Services;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence;
@@ -16,6 +17,7 @@ builder.Services.AddScoped<IMealPlannerService, MealPlannerService>();
 builder.Services.AddScoped<IMealRepository, MealRepository>();
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
 builder.Services.AddScoped<IMealIngredientRepository, MealIngredientRepository>();
+builder.Services.AddScoped<IIngredientMapper, IngredientMapper>();
 
 builder.Services.AddDbContext<MealPlannerContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))

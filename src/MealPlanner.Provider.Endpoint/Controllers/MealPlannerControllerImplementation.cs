@@ -1,3 +1,4 @@
+using System.Net;
 using MealPlanner.Provider.Endpoint.Models;
 using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
@@ -46,14 +47,9 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpPost]
     [Route("ingredients")]
-    public ActionResult AddIngredient([FromBody] AddIngredientRequest request)
+    public HttpStatusCode AddIngredient([FromBody] AddIngredientRequest request)
     {
-        // .Net automcatically handling bad requests that don't conform to the AddIngredientRequest model?
-        if (request == null)
-        {
-            return BadRequest("You didn't send anything");
-        }
-        
-        return Ok();
+        _mealPlannerService.AddIngredient(request);
+        return HttpStatusCode.Created;
     }
 }

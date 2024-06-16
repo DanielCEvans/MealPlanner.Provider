@@ -17,4 +17,10 @@ public class IngredientRepository : IIngredientRepository
         
         return ingredients;
     }
+
+    public void AddIngredient(Ingredient ingredient)
+    {
+        _dbContext.Ingredients.Add(ingredient);
+        _dbContext.SaveChanges();
+    }
 }
