@@ -13,18 +13,21 @@ public class MealPlannerService : IMealPlannerService
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IMealIngredientRepository _mealIngredientRepository;
     private readonly IIngredientMapper _ingredientMapper;
+    private readonly IMealMapper _mealMapper;
 
     public MealPlannerService(
         IMealRepository mealRepository, 
         IIngredientRepository ingredientRepository, 
         IMealIngredientRepository mealIngredientRepository,
-        IIngredientMapper ingredientMapper
+        IIngredientMapper ingredientMapper,
+        IMealMapper mealMapper
         )
     {
         _mealRepository = mealRepository;
         _ingredientRepository = ingredientRepository;
         _mealIngredientRepository = mealIngredientRepository;
         _ingredientMapper = ingredientMapper;
+        _mealMapper = mealMapper;
     }
     public List<Meal> GetAllMeals()
     {
@@ -57,6 +60,11 @@ public class MealPlannerService : IMealPlannerService
     {
         Ingredient ingredient = _ingredientMapper.ToPersistence(ingredientRequest);
         _ingredientRepository.AddIngredient(ingredient);
+    }
+    public void AddMeal(AddMealRequest addMealRequest)
+    {
+        Meal meal = _mealMapper.AddMealRequestToMealPersistence(addMealRequest);
+        _mealRepository.AddMeal(meal);
     }
 
     private List<RequiredIngredient> GetFinalIngredientsList(Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary)

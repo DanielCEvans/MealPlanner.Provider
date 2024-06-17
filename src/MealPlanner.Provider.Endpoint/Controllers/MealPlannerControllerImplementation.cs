@@ -44,7 +44,7 @@ public class MealPlannerControllerImplementation : ControllerBase
     {
         
         // 1. Add meal in to the meal table
-
+        _mealPlannerService.AddMeal(request);
             // TODO: if the meal already exists, return bad request 
             
         // 2. Get all the ingredients from the database that contain the ingredients in the request

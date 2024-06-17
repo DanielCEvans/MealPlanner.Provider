@@ -18,6 +18,7 @@ public class MealPlannerServiceTests
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IMealIngredientRepository _mealIngredientRepository;
     private readonly IIngredientMapper _ingredientMapper;
+    private readonly IMealMapper _mealMapper;
 
     private List<RequiredIngredient> _result;
     private List<string> MealNames;
@@ -28,12 +29,14 @@ public class MealPlannerServiceTests
         _ingredientRepository = Substitute.For<IIngredientRepository>();
         _mealIngredientRepository = Substitute.For<IMealIngredientRepository>();
         _ingredientMapper = Substitute.For<IIngredientMapper>();
+        _mealMapper = Substitute.For<IMealMapper>();
 
         _subject = new MealPlannerService(
             _mealRepository,
             _ingredientRepository,
             _mealIngredientRepository,
-            _ingredientMapper);
+            _ingredientMapper,
+            _mealMapper);
     }
 
     [Fact]

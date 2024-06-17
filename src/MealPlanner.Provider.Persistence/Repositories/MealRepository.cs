@@ -16,4 +16,10 @@ public class MealRepository : IMealRepository
 
         return meals;
     }
+
+    public void AddMeal(Meal meal)
+    {
+        _dbContext.Meals.Add(meal);
+        _dbContext.SaveChanges();
+    }
 }
