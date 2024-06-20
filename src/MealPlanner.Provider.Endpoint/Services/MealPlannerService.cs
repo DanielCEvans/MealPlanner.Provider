@@ -14,13 +14,15 @@ public class MealPlannerService : IMealPlannerService
     private readonly IMealIngredientRepository _mealIngredientRepository;
     private readonly IIngredientMapper _ingredientMapper;
     private readonly IMealMapper _mealMapper;
+    private readonly IMealIngredientMapper _mealIngredientMapper;
 
     public MealPlannerService(
         IMealRepository mealRepository, 
         IIngredientRepository ingredientRepository, 
         IMealIngredientRepository mealIngredientRepository,
         IIngredientMapper ingredientMapper,
-        IMealMapper mealMapper
+        IMealMapper mealMapper,
+        IMealIngredientMapper mealIngredientMapper
         )
     {
         _mealRepository = mealRepository;
@@ -28,6 +30,7 @@ public class MealPlannerService : IMealPlannerService
         _mealIngredientRepository = mealIngredientRepository;
         _ingredientMapper = ingredientMapper;
         _mealMapper = mealMapper;
+        _mealIngredientMapper = mealIngredientMapper;
     }
     public List<Meal> GetAllMeals()
     {
@@ -62,16 +65,16 @@ public class MealPlannerService : IMealPlannerService
         _ingredientRepository.AddIngredient(ingredient);
     }
 
-    public void AddIngredients(List<MealIngredient> mealIngredients)
-    {
-        List<Ingredient> ingredients = _ingredientMapper.ToPersistence(mealIngredients);
-        _ingredientRepository.AddIngredients(ingredients);
-    }
-
     public void AddMeal(AddMealRequest addMealRequest)
     {
         Meal meal = _mealMapper.AddMealRequestToMealPersistence(addMealRequest);
         _mealRepository.AddMeal(meal);
+        
+        List<Ingredient> ingredients = _ingredientMapper.ToPersistence(addMealRequest.MealIngredients);
+        _ingredientRepository.AddIngredients(ingredients);
+
+        List<MealIngredients> mealIngredients = _mealIngredientMapper.ToPersistance(addMealRequest);
+        _mealIngredientRepository.AddMeal(mealIngredients);
     }
 
     private List<RequiredIngredient> GetFinalIngredientsList(Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary)

@@ -51,13 +51,7 @@ public class MealPlannerControllerImplementation : ControllerBase
             // TODO: if the meal already exists, return bad request 
             return HttpStatusCode.Conflict;
         }
-            
-        // 2. Add all ingredients into the database in the request
-        // this will insert only ingredients that are not already in the database
-        // this will assume that there is none of this ingredient in the 'Inventory'
-        _mealPlannerService.AddIngredients(request.MealIngredients); 
         
-        // TODO: add request to the MealIngredients table
         return HttpStatusCode.Created;
     }
     

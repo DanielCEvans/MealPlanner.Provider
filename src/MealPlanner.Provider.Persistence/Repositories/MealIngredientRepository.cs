@@ -33,4 +33,13 @@ public class MealIngredientRepository : IMealIngredientRepository
             };
         return query.ToList();
     }
+
+    public void AddMeal(List<MealIngredients> mealIngredients)
+    {
+        foreach (var mealIngredient in mealIngredients)
+        {
+            _dbContext.MealIngredients.Add(mealIngredient);
+        }
+        _dbContext.SaveChanges();
+    }
 }
