@@ -21,7 +21,7 @@ builder.Services.AddScoped<IIngredientMapper, IngredientMapper>();
 builder.Services.AddScoped<IMealMapper, MealMapper>();
 
 builder.Services.AddDbContext<MealPlannerContext>(options => 
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseNpgsql(builder.Configuration.GetConnectionString("ErrorDetailsConnection"))
 );
 
 var app = builder.Build();

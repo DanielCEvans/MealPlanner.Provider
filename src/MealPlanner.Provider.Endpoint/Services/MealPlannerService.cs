@@ -61,6 +61,13 @@ public class MealPlannerService : IMealPlannerService
         Ingredient ingredient = _ingredientMapper.ToPersistence(ingredientRequest);
         _ingredientRepository.AddIngredient(ingredient);
     }
+
+    public void AddIngredients(List<MealIngredient> mealIngredients)
+    {
+        List<Ingredient> ingredients = _ingredientMapper.ToPersistence(mealIngredients);
+        _ingredientRepository.AddIngredients(ingredients);
+    }
+
     public void AddMeal(AddMealRequest addMealRequest)
     {
         Meal meal = _mealMapper.AddMealRequestToMealPersistence(addMealRequest);

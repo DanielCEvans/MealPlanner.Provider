@@ -6,4 +6,5 @@ namespace MealPlanner.Provider.Endpoint.Mappers;
 public interface IIngredientMapper
 {
     Ingredient ToPersistence(AddIngredientRequest ingredientRequest);
+    List<Ingredient> ToPersistence(List<MealIngredient> ingredientRequest);
 }

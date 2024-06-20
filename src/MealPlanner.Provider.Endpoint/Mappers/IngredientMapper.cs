@@ -15,4 +15,21 @@ public class IngredientMapper : IIngredientMapper
             IngredientCategory = ingredientRequest.IngredientCategory
         };
     }
+
+    public List<Ingredient> ToPersistence(List<MealIngredient> ingredientRequest)
+    {
+        List<Ingredient> mealIngredients = new List<Ingredient>();
+
+        foreach (var mealIngredient in ingredientRequest)
+        {
+            mealIngredients.Add(new Ingredient()
+            {
+                IngredientName = mealIngredient.IngredientName,
+                MeasurementUnit = mealIngredient.MeasurementUnit,
+                IngredientCategory = mealIngredient.IngredientCategory
+            });
+        }
+
+        return mealIngredients;
+    }
 }

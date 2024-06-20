@@ -42,21 +42,22 @@ public class MealPlannerControllerImplementation : ControllerBase
     [Route("meals/add")]
     public HttpStatusCode AddMeal([FromBody] AddMealRequest request)
     {
-        
-        // 1. Add meal in to the meal table
-        _mealPlannerService.AddMeal(request);
+        try
+        {
+            _mealPlannerService.AddMeal(request);
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+        {
             // TODO: if the meal already exists, return bad request 
+            return HttpStatusCode.Conflict;
+        }
             
-        // 2. Get all the ingredients from the database that contain the ingredients in the request
+        // 2. Add all ingredients into the database in the request
+        // this will insert only ingredients that are not already in the database
+        // this will assume that there is none of this ingredient in the 'Inventory'
+        _mealPlannerService.AddIngredients(request.MealIngredients); 
         
-        // 3. Loop through each ingredient in the request
-        
-            // if ingredient is not in the list returned from the database
-                    
-                // add the ingredient into the database
-            
-            // add the mealIngredient into the mealIngredients table
-            
+        // TODO: add request to the MealIngredients table
         return HttpStatusCode.Created;
     }
     
