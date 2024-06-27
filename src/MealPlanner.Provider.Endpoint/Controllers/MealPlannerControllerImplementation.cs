@@ -19,7 +19,7 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpGet]
     [Route("meals")]
-    public List<Meal> GetAllMeals()
+    public List<MealDTO> GetAllMeals()
     {
         return _mealPlannerService.GetAllMeals();
     }
