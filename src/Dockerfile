@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the entire solution into the build context
-COPY .. ./
+COPY . ./
 
 # Set the working directory to the Endpoint project
 WORKDIR /app/MealPlanner.Provider.Endpoint
