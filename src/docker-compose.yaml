@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Username=postgres;Password=postgres;Server=meal_planner_db;Port=5432;Database=meal_planner;IntegratedSecurity=true;Pooling=true;
+      - ConnectionStrings__DefaultConnection=Username=postgres;Password=postgres;Server=meal_planner_db;Port=5432;Database=meal_planner;Pooling=true;
       - ASPNETCORE_URLS=http://+:80
     networks:
       - dev
@@ -27,7 +27,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=meal_planner
+      - POSTGRES_DB=meal_planner 
     ports:
       - "5433:5432"
     restart: always

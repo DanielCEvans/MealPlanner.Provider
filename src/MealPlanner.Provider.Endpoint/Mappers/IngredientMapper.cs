@@ -9,10 +9,10 @@ public class IngredientMapper : IIngredientMapper
     {
         return new Ingredient()
         {
-            IngredientName = ingredientRequest.IngredientName,
-            MeasurementUnit = ingredientRequest.MeasurementUnit,
-            IngredientAmount = ingredientRequest.IngredientAmount,
-            IngredientCategory = ingredientRequest.IngredientCategory
+            IngredientName = ingredientRequest.name,
+            MeasurementUnit = ingredientRequest.unit,
+            IngredientAmount = ingredientRequest.amount,
+            IngredientCategory = ingredientRequest.category
         };
     }
 
