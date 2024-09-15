@@ -34,8 +34,10 @@ builder.Services.AddScoped<IIngredientMapper, IngredientMapper>();
 builder.Services.AddScoped<IMealMapper, MealMapper>();
 builder.Services.AddScoped<IMealIngredientMapper, MealIngredientMapper>();
 
+var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<MealPlannerContext>(options => 
-    options.UseNpgsql(builder.Configuration.GetConnectionString("ErrorDetailsConnection"))
+    options.UseNpgsql(conn)
 );
 
 var app = builder.Build();
@@ -49,7 +51,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.MapControllers();
 
