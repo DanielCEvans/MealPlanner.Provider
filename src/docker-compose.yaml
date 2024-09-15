@@ -1,0 +1,40 @@
+version: '3.4'
+
+networks:
+  dev:
+    driver: bridge
+    
+services:
+  meal-planner-api:
+    image: docker.io/library/meal-planner-api
+    depends_on:
+      - "meal_planner_db"
+    container_name: meal-planner-services
+    ports:
+      - "8088:80"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Username=postgres;Password=postgres;Server=meal_planner_db;Port=5432;Database=meal_planner;IntegratedSecurity=true;Pooling=true;
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - dev
+  
+  meal_planner_db:
+    image: postgres:latest
+    container_name: meal_planner_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=meal_planner
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - meal_planner_data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+volumes:
+  meal_planner_data:
