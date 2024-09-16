@@ -1,26 +1,28 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Provider.Persistence.Models;
 
-[Table("ingredient")]
-[PrimaryKey(nameof(IngredientName), nameof(MeasurementUnit))]
+[Table("Ingredients")]
 public class Ingredient
 {
     [Key]
-    [Column("ingredient_name")]
+    public int IngredientId { get; set; }
+
+    [Required]
+    [MaxLength(255)]
     public string IngredientName { get; set; }
-    
-    [Key]
-    [Column("measurement_unit")]
-    public string MeasurementUnit { get; set; }
 
-    [Column("ingredient_amount")] 
-    public int IngredientAmount { get; set; }
+    [Required]
+    [MaxLength(50)]
+    public string Unit { get; set; }
 
-    [Column("ingredient_category")]
-    public string IngredientCategory { get; set; }
+    public int CategoryId { get; set; }
 
-    public ICollection<MealIngredients> MealIngredients { get; set; }
+    [ForeignKey("CategoryId")]
+    public IngredientCategory Category { get; set; }
+
+    public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+    public ICollection<UserIngredient> UserIngredients { get; set; }
+    public ICollection<ShoppingListItem> ShoppingListItems { get; set; }
 }
