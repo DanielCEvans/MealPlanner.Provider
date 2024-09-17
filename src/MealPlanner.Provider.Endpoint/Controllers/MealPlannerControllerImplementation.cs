@@ -18,12 +18,12 @@ public class MealPlannerControllerImplementation : ControllerBase
         _mealPlannerService = mealPlannerService;
     }
 
-    // [HttpGet]
-    // [Route("meals")]
-    // public List<MealDTO> GetAllMeals()
-    // {
-    //     return _mealPlannerService.GetAllMeals();
-    // }
+    [HttpGet]
+    [Route("recipes")]
+    public List<Recipe> GetAllRecipes()
+    {
+        return _mealPlannerService.GetAllRecipes();
+    }
     //
     // [HttpGet]
     // [Route("meals/{mealName}")]

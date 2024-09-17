@@ -28,6 +28,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IMealPlannerService, MealPlannerService>();
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 // builder.Services.AddScoped<IIngredientMapper, IngredientMapper>();
 // builder.Services.AddScoped<IMealMapper, MealMapper>();
 // builder.Services.AddScoped<IMealIngredientMapper, MealIngredientMapper>();

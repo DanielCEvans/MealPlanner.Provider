@@ -10,27 +10,31 @@ namespace MealPlanner.Provider.Endpoint.Services;
 public class MealPlannerService : IMealPlannerService
 {
     private readonly IIngredientRepository _ingredientRepository;
+
+    private readonly IRecipeRepository _recipeRepository;
     // private readonly IIngredientMapper _ingredientMapper;
     // private readonly IMealMapper _mealMapper;
     // private readonly IMealIngredientMapper _mealIngredientMapper;
 
     public MealPlannerService(
-        IIngredientRepository ingredientRepository
+        IIngredientRepository ingredientRepository,
+        IRecipeRepository recipeRepository
         // IIngredientMapper ingredientMapper
         // IMealMapper mealMapper,
         // IMealIngredientMapper mealIngredientMapper
         )
     {
         _ingredientRepository = ingredientRepository;
+        _recipeRepository = recipeRepository;
         // _ingredientMapper = ingredientMapper;
         // _mealMapper = mealMapper;
         // _mealIngredientMapper = mealIngredientMapper;
     }
-    // public List<MealDTO> GetAllMeals()
-    // {
-    //     var meals = _mealRepository.GetAllMeals(); 
-    //     return _mealMapper.MealToMealDTO(meals);
-    // }
+    
+    public List<Recipe> GetAllRecipes()
+    {
+        return _recipeRepository.GetAllRecipes(); 
+    }
 
     public List<IngredientWithCategoryDTO> GetAllIngredients()
     {
