@@ -10,19 +10,19 @@ namespace MealPlanner.Provider.Endpoint.Services;
 public class MealPlannerService : IMealPlannerService
 {
     private readonly IIngredientRepository _ingredientRepository;
-    private readonly IIngredientMapper _ingredientMapper;
+    // private readonly IIngredientMapper _ingredientMapper;
     // private readonly IMealMapper _mealMapper;
     // private readonly IMealIngredientMapper _mealIngredientMapper;
 
     public MealPlannerService(
-        IIngredientRepository ingredientRepository, 
-        IIngredientMapper ingredientMapper
+        IIngredientRepository ingredientRepository
+        // IIngredientMapper ingredientMapper
         // IMealMapper mealMapper,
         // IMealIngredientMapper mealIngredientMapper
         )
     {
         _ingredientRepository = ingredientRepository;
-        _ingredientMapper = ingredientMapper;
+        // _ingredientMapper = ingredientMapper;
         // _mealMapper = mealMapper;
         // _mealIngredientMapper = mealIngredientMapper;
     }
