@@ -32,7 +32,7 @@ public class MealPlannerService : IMealPlannerService
     //     return _mealMapper.MealToMealDTO(meals);
     // }
 
-    public List<Ingredient> GetAllIngredients()
+    public List<IngredientWithCategoryDTO> GetAllIngredients()
     {
         return _ingredientRepository.GetAllIngredients();
     }
