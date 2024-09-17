@@ -1,4 +1,5 @@
 using System.Net;
+using MealPlanner.Provider.Endpoint.Models;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
@@ -61,11 +62,11 @@ public class MealPlannerControllerImplementation : ControllerBase
         return _mealPlannerService.GetAllIngredients();
     }
 
-    // [HttpPost]
-    // [Route("ingredients")]
-    // public HttpStatusCode AddIngredient([FromBody] AddIngredientRequest request)
-    // {
-    //     _mealPlannerService.AddIngredient(request);
-    //     return HttpStatusCode.Created;
-    // }
+    [HttpPost]
+    [Route("ingredients/user")]
+    public HttpStatusCode AddIngredient([FromBody] AddUserIngredientRequest request)
+    {
+        _mealPlannerService.AddUserIngredient(request);
+        return HttpStatusCode.Created;
+    }
 }

@@ -1,3 +1,4 @@
+using MealPlanner.Provider.Endpoint.Models;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
@@ -7,15 +8,16 @@ namespace MealPlanner.Provider.Endpoint.Services;
 public class MealPlannerService : IMealPlannerService
 {
     private readonly IIngredientRepository _ingredientRepository;
-
     private readonly IRecipeRepository _recipeRepository;
+    private readonly IUserIngredientRepository _userIngredientRepositoryRepository;
     // private readonly IIngredientMapper _ingredientMapper;
     // private readonly IMealMapper _mealMapper;
     // private readonly IMealIngredientMapper _mealIngredientMapper;
 
     public MealPlannerService(
         IIngredientRepository ingredientRepository,
-        IRecipeRepository recipeRepository
+        IRecipeRepository recipeRepository,
+        IUserIngredientRepository userIngredientRepositoryRepository
         // IIngredientMapper ingredientMapper
         // IMealMapper mealMapper,
         // IMealIngredientMapper mealIngredientMapper
@@ -23,6 +25,7 @@ public class MealPlannerService : IMealPlannerService
     {
         _ingredientRepository = ingredientRepository;
         _recipeRepository = recipeRepository;
+        _userIngredientRepositoryRepository = userIngredientRepositoryRepository;
         // _ingredientMapper = ingredientMapper;
         // _mealMapper = mealMapper;
         // _mealIngredientMapper = mealIngredientMapper;
@@ -36,6 +39,17 @@ public class MealPlannerService : IMealPlannerService
     public List<IngredientWithCategoryDTO> GetAllIngredients()
     {
         return _ingredientRepository.GetAllIngredients();
+    }
+
+    public void AddUserIngredient(AddUserIngredientRequest addUserIngredientRequest)
+    {
+        var userIngredient = new UserIngredient
+        {
+            UserId = addUserIngredientRequest.UserId,
+            IngredientId = addUserIngredientRequest.IngredientId,
+            Quantity = addUserIngredientRequest.Quantity
+        };
+        _userIngredientRepositoryRepository.AddUserIngredient(userIngredient);
     }
 
     // public List<MealIngredients> GetMealIngredients (string mealName)
