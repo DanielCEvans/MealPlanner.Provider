@@ -1,6 +1,4 @@
 using System.Net;
-using MealPlanner.Provider.Endpoint.Models;
-using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;

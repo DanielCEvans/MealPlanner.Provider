@@ -1,6 +1,6 @@
-namespace MealPlanner.Provider.Endpoint.Models;
-
-public class GetIngredientsListRequest
-{
-    public List<string> MealNames { get; set; }
-}
+// namespace MealPlanner.Provider.Endpoint.Models;
+//
+// public class GetIngredientsListRequest
+// {
+//     public List<string> MealNames { get; set; }
+// }
