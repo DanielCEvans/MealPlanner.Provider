@@ -2,7 +2,12 @@ using MealPlanner.Provider.Persistence.Models;
 
 namespace MealPlanner.Provider.Persistence.Repositories;
 
-
+public class RecipeDTO
+{
+    public int RecipeId { get; set; }
+    public string RecipeName { get; set; }
+    public string RecipeDescription { get; set; }
+}
 
 public class RecipeRepository : IRecipeRepository
 {
@@ -13,8 +18,13 @@ public class RecipeRepository : IRecipeRepository
         _dbContext = dbContext;
     }
 
-    public List<Recipe> GetAllRecipes()
+    public List<RecipeDTO> GetAllRecipes()
     {
-        return _dbContext.Recipes.ToList();
+        return _dbContext.Recipes.Select(r => new RecipeDTO
+        {
+            RecipeId = r.RecipeId,
+            RecipeName = r.RecipeName,
+            RecipeDescription = r.Description
+        }).ToList();
     }
 }

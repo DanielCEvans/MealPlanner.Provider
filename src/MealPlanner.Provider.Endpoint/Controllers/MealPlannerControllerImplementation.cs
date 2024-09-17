@@ -20,7 +20,7 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpGet]
     [Route("recipes")]
-    public List<Recipe> GetAllRecipes()
+    public List<RecipeDTO> GetAllRecipes()
     {
         return _mealPlannerService.GetAllRecipes();
     }

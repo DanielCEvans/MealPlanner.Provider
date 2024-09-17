@@ -4,5 +4,5 @@ namespace MealPlanner.Provider.Persistence.Repositories;
 
 public interface IRecipeRepository
 {
-    public List<Recipe> GetAllRecipes();
+    public List<RecipeDTO> GetAllRecipes();
 }

@@ -31,7 +31,7 @@ public class MealPlannerService : IMealPlannerService
         // _mealIngredientMapper = mealIngredientMapper;
     }
     
-    public List<Recipe> GetAllRecipes()
+    public List<RecipeDTO> GetAllRecipes()
     {
         return _recipeRepository.GetAllRecipes(); 
     }

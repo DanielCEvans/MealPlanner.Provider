@@ -7,7 +7,7 @@ namespace MealPlanner.Provider.Endpoint.Services.Interfaces;
 
 public interface IMealPlannerService
 {
-    List<Recipe> GetAllRecipes();
+    List<RecipeDTO> GetAllRecipes();
     // void AddMeal(AddMealRequest addMealRequest);
     List<IngredientWithCategoryDTO> GetAllIngredients();
     // List<MealIngredients> GetMealIngredients(string mealName);
