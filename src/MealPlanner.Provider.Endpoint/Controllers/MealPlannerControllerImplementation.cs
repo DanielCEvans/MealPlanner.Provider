@@ -26,7 +26,7 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpPost]
     [Route("shopping-list")]
-    public List<IngredientWithCategoryDTO> GetShoppingList([FromBody] ShoppingListRequest request)
+    public List<RecipeIngredientDTO> GetShoppingList([FromBody] ShoppingListRequest request)
     {
         return _mealPlannerService.GetShoppingList(request);
     }

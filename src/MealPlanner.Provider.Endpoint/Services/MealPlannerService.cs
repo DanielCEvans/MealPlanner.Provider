@@ -10,20 +10,22 @@ public class MealPlannerService : IMealPlannerService
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IRecipeRepository _recipeRepository;
     private readonly IUserIngredientRepository _userIngredientRepository;
-
     private readonly IRecipeIngredientRepository _recipeIngredientRepository;
+    private readonly IShoppingLists _shoppingListsRepository;
 
     public MealPlannerService(
         IIngredientRepository ingredientRepository,
         IRecipeRepository recipeRepository,
         IUserIngredientRepository userIngredientRepository,
-        IRecipeIngredientRepository recipeIngredientRepository
+        IRecipeIngredientRepository recipeIngredientRepository,
+        IShoppingLists shoppingListsRepository
         )
     {
         _ingredientRepository = ingredientRepository;
         _recipeRepository = recipeRepository;
         _userIngredientRepository = userIngredientRepository;
         _recipeIngredientRepository = recipeIngredientRepository;
+        _shoppingListsRepository = shoppingListsRepository;
     }
     
     public List<RecipeDTO> GetAllRecipes()
@@ -47,7 +49,7 @@ public class MealPlannerService : IMealPlannerService
         _userIngredientRepository.AddUserIngredient(userIngredient);
     }
 
-    public List<IngredientWithCategoryDTO> GetShoppingList(ShoppingListRequest request)
+    public List<RecipeIngredientDTO> GetShoppingList(ShoppingListRequest request)
     {
         // Get all ingredients from the RecipeIngredients table for each selected recipe
         
@@ -59,6 +61,22 @@ public class MealPlannerService : IMealPlannerService
         //     category
         // }
         var recipeIngredients = _recipeIngredientRepository.GetRecipeIngredients(request.RecipeIds);
+        Dictionary<int, RecipeIngredientDTO> recipeIngredientsDictionary = new Dictionary<int, RecipeIngredientDTO>();
+        // multiple recipes can have the same ingredient which is why we need to check if the ingredient has already 
+        // been added to the dictionary
+        foreach (var ingredient in recipeIngredients)
+        {
+            int ingredientId = ingredient.IngredientId;
+            
+            if (recipeIngredientsDictionary.ContainsKey(ingredientId))
+            {
+                recipeIngredientsDictionary[ingredientId].RecipeIngredientQuantity += ingredient.RecipeIngredientQuantity;
+            }
+            else
+            {
+                recipeIngredientsDictionary[ingredientId] = ingredient;
+            }
+        }
         
         // Get all the ingredients from the UserIngredients table for each matching ingredient from the Recipe Ingredients (use ingredientId)
         
@@ -68,10 +86,14 @@ public class MealPlannerService : IMealPlannerService
         //     quantity,    
         // }
         var userIngredients = _userIngredientRepository.GetUserIngredients(request.UserId);
-        // Subtract the recipe ingredients from the user ingredients to determine the shopping list
-        // Note, you might have duplicates in the recipe ingredients list if there a recipes requiring the same ingredient
-        // these need to be added up
+        Dictionary<int, UserIngredientDTO> userIngredientsDictionary = new Dictionary<int, UserIngredientDTO>();
+        // we know a user cannot have multiple of the same ingredients in the 'fridge' at once
+        foreach (var ingredient in userIngredients)
+        {
+            userIngredientsDictionary[ingredient.IngredientId] = ingredient;
+        }
         
+        // Subtract the recipe ingredients from the user ingredients to determine the shopping list
         // {
         //     userId,
         //     [ingredientID,
@@ -80,14 +102,65 @@ public class MealPlannerService : IMealPlannerService
         //      category,]    
         // }
         
+        // for each ingredient in the recipe ingredients, it is assumed that the ingredient will be consumed
+        // therefore, even if the recipe ingredient is not required and doesn't make it onto the list, the amount of the ingredient
+        // in the userIngredients table needs to be updated.
+        //
+        // for each ingredient in recipe ingredients, check if ingredient is in user ingredients and if so, 
+        // subtract the amount in the 'fridge' from the required amount
+        
+        // for each ingredient in the recipe ingredients list, if the ingredient amount > 0, this ingredient goes onto the list
+        
         // add the shopping list to the Shopping List table (pass in user ID)
         
         // add the shopping list ingredients to the Shopping List Items table
         // add all ingredients and returned shopping list id to table
         
+        // update the user ingredients table by specifying the new amount after generating the list. 
+        // e.g. if 1000grams of flour and we require 400grams, amount in the database should be 600grams
         // return the shopping list
+
+        foreach (var recipeIngredient in recipeIngredientsDictionary)
+        {
+            int ingredientId = recipeIngredient.Key;
+            if (userIngredientsDictionary.ContainsKey(ingredientId))
+            {
+                recipeIngredient.Value.RecipeIngredientQuantity -=
+                    userIngredientsDictionary[ingredientId].UserIngredientQuantity;
+
+                userIngredientsDictionary[ingredientId].UserIngredientQuantity -=
+                    recipeIngredient.Value.RecipeIngredientQuantity;
+            }
+        }
+
+        List<RecipeIngredientDTO> shoppingList = new List<RecipeIngredientDTO>();
+
+        foreach (var ingredient in recipeIngredientsDictionary.Values)
+        {
+            if (ingredient.RecipeIngredientQuantity > 0)
+            {
+                shoppingList.Add(ingredient);
+            }
+        }
         
-        throw new NotImplementedException();
+        // save shopping list to database
+        var databaseShoppingList = new ShoppingList
+        {
+            GeneratedDate = DateTime.UtcNow,
+            UserId = request.UserId,
+            ShoppingListItems = new List<ShoppingListItem>(),
+        };
+
+        foreach (var ingredient in shoppingList)
+        {
+            databaseShoppingList.ShoppingListItems.Add(new ShoppingListItem
+            {
+                IngredientId = ingredient.IngredientId,
+                RequiredQuantity = ingredient.RecipeIngredientQuantity
+            });
+        }
+        _shoppingListsRepository.SaveShoppingList(databaseShoppingList);
+        return shoppingList;
     }
 
     // public List<MealIngredients> GetMealIngredients (string mealName)
@@ -148,23 +221,16 @@ public class MealPlannerService : IMealPlannerService
     //     return finalIngredientsList.OrderBy(ingredient => ingredient.IngredientCategory).ToList();
     // }
 
-    // private Dictionary<string, IngredientAndMealIngredient> GetIngredientsListAsDictionary(
-    //     List<IngredientAndMealIngredient> mealIngredients)
     // {
-    //     Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary = new Dictionary<string, IngredientAndMealIngredient>();
-    //      
-    //     foreach (IngredientAndMealIngredient mealIngredient in mealIngredients)
-    //     {
-    //         if (ingredientsListAsDictionary.ContainsKey(mealIngredient.IngredientName))
-    //         {
-    //             ingredientsListAsDictionary[mealIngredient.IngredientName].MealIngredientAmount +=
-    //                 mealIngredient.MealIngredientAmount;
-    //         }
-    //         else
-    //         {
-    //             ingredientsListAsDictionary.Add(mealIngredient.IngredientName, mealIngredient);
-    //         }
-    //     }
-    //     return ingredientsListAsDictionary;
+    //     recipeID,
+    //     ingredientID,
+    //     ingredientName
+    //     quantity,
+    //     category
+    // }
+    // private Dictionary<int, RecipeIngredientDTO> GetRecipeIngredientsListAsDictionary(
+    //     List<RecipeIngredientDTO> recipeIngredients)
+    // {
+    //     Dictionary<int, RecipeIngredientDTO> recipeIngredient
     // }
 }
