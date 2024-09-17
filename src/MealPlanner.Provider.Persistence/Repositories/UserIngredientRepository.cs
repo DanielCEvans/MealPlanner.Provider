@@ -3,6 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Provider.Persistence.Repositories;
 
+public class UserIngredientDTO
+{
+    public int IngredientId { get; set; }
+    public decimal UserIngredientQuantity { get; set; }
+}
+
 public class UserIngredientRepository : IUserIngredientRepository
 {
     private readonly MealPlannerContext _dbContext;
@@ -17,4 +23,16 @@ public class UserIngredientRepository : IUserIngredientRepository
         _dbContext.UserIngredients.Add(userIngredient);
         _dbContext.SaveChanges();
     }
-}
+
+    public List<UserIngredientDTO> GetUserIngredients(int userId)
+    {
+        var userIngredients = _dbContext.UserIngredients
+            .Where(ui => ui.UserId == userId)
+            .Select(ui => new UserIngredientDTO
+            {
+                IngredientId = ui.IngredientId,
+                UserIngredientQuantity = ui.Quantity
+            }).ToList();
+        return userIngredients;
+    }
+}   

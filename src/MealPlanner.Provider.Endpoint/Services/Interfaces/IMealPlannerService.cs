@@ -13,4 +13,6 @@ public interface IMealPlannerService
     // List<RequiredIngredient> GetIngredientsList(List<string> mealNames);
     // void AddIngredient(AddIngredientRequest ingredientRequest);
     void AddUserIngredient(AddUserIngredientRequest addUserIngredientRequest);
+
+    List<IngredientWithCategoryDTO> GetShoppingList(ShoppingListRequest request);
 }

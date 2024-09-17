@@ -9,26 +9,21 @@ public class MealPlannerService : IMealPlannerService
 {
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IRecipeRepository _recipeRepository;
-    private readonly IUserIngredientRepository _userIngredientRepositoryRepository;
-    // private readonly IIngredientMapper _ingredientMapper;
-    // private readonly IMealMapper _mealMapper;
-    // private readonly IMealIngredientMapper _mealIngredientMapper;
+    private readonly IUserIngredientRepository _userIngredientRepository;
+
+    private readonly IRecipeIngredientRepository _recipeIngredientRepository;
 
     public MealPlannerService(
         IIngredientRepository ingredientRepository,
         IRecipeRepository recipeRepository,
-        IUserIngredientRepository userIngredientRepositoryRepository
-        // IIngredientMapper ingredientMapper
-        // IMealMapper mealMapper,
-        // IMealIngredientMapper mealIngredientMapper
+        IUserIngredientRepository userIngredientRepository,
+        IRecipeIngredientRepository recipeIngredientRepository
         )
     {
         _ingredientRepository = ingredientRepository;
         _recipeRepository = recipeRepository;
-        _userIngredientRepositoryRepository = userIngredientRepositoryRepository;
-        // _ingredientMapper = ingredientMapper;
-        // _mealMapper = mealMapper;
-        // _mealIngredientMapper = mealIngredientMapper;
+        _userIngredientRepository = userIngredientRepository;
+        _recipeIngredientRepository = recipeIngredientRepository;
     }
     
     public List<RecipeDTO> GetAllRecipes()
@@ -49,7 +44,50 @@ public class MealPlannerService : IMealPlannerService
             IngredientId = addUserIngredientRequest.IngredientId,
             Quantity = addUserIngredientRequest.Quantity
         };
-        _userIngredientRepositoryRepository.AddUserIngredient(userIngredient);
+        _userIngredientRepository.AddUserIngredient(userIngredient);
+    }
+
+    public List<IngredientWithCategoryDTO> GetShoppingList(ShoppingListRequest request)
+    {
+        // Get all ingredients from the RecipeIngredients table for each selected recipe
+        
+        // {
+        //     recipeID,
+        //     ingredientID,
+        //     ingredientName
+        //     quantity,
+        //     category
+        // }
+        var recipeIngredients = _recipeIngredientRepository.GetRecipeIngredients(request.RecipeIds);
+        
+        // Get all the ingredients from the UserIngredients table for each matching ingredient from the Recipe Ingredients (use ingredientId)
+        
+        // {
+        //     userId,
+        //     ingredientID,    
+        //     quantity,    
+        // }
+        var userIngredients = _userIngredientRepository.GetUserIngredients(request.UserId);
+        // Subtract the recipe ingredients from the user ingredients to determine the shopping list
+        // Note, you might have duplicates in the recipe ingredients list if there a recipes requiring the same ingredient
+        // these need to be added up
+        
+        // {
+        //     userId,
+        //     [ingredientID,
+        //      ingredientName,
+        //      quantity,    
+        //      category,]    
+        // }
+        
+        // add the shopping list to the Shopping List table (pass in user ID)
+        
+        // add the shopping list ingredients to the Shopping List Items table
+        // add all ingredients and returned shopping list id to table
+        
+        // return the shopping list
+        
+        throw new NotImplementedException();
     }
 
     // public List<MealIngredients> GetMealIngredients (string mealName)

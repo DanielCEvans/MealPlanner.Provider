@@ -23,6 +23,13 @@ public class MealPlannerControllerImplementation : ControllerBase
     {
         return _mealPlannerService.GetAllRecipes();
     }
+
+    [HttpPost]
+    [Route("shopping-list")]
+    public List<IngredientWithCategoryDTO> GetShoppingList([FromBody] ShoppingListRequest request)
+    {
+        return _mealPlannerService.GetShoppingList(request);
+    }
     //
     // [HttpGet]
     // [Route("meals/{mealName}")]
