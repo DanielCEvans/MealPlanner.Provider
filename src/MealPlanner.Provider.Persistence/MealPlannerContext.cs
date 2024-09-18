@@ -30,7 +30,10 @@ public class MealPlannerContext : DbContext
         modelBuilder.Entity<IngredientCategory>()
             .HasIndex(e => e.CategoryName).IsUnique();
 
-        // Other configurations remain the same as they are handled by annotations
+        // UserIngredient configuration
+        modelBuilder.Entity<UserIngredient>()
+            .HasIndex(ui => new { ui.UserId, ui.IngredientId })
+            .IsUnique();
     }
         
 }
