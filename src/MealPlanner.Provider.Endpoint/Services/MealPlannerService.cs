@@ -1,6 +1,4 @@
-using MealPlanner.Provider.Endpoint.Mappers;
 using MealPlanner.Provider.Endpoint.Models;
-using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
@@ -9,115 +7,127 @@ namespace MealPlanner.Provider.Endpoint.Services;
 
 public class MealPlannerService : IMealPlannerService
 {
-    private readonly IMealRepository _mealRepository;
     private readonly IIngredientRepository _ingredientRepository;
-    private readonly IMealIngredientRepository _mealIngredientRepository;
-    private readonly IIngredientMapper _ingredientMapper;
-    private readonly IMealMapper _mealMapper;
-    private readonly IMealIngredientMapper _mealIngredientMapper;
+    private readonly IRecipeRepository _recipeRepository;
+    private readonly IUserIngredientRepository _userIngredientRepository;
+    private readonly IRecipeIngredientRepository _recipeIngredientRepository;
+    private readonly IShoppingLists _shoppingListsRepository;
 
     public MealPlannerService(
-        IMealRepository mealRepository, 
-        IIngredientRepository ingredientRepository, 
-        IMealIngredientRepository mealIngredientRepository,
-        IIngredientMapper ingredientMapper,
-        IMealMapper mealMapper,
-        IMealIngredientMapper mealIngredientMapper
+        IIngredientRepository ingredientRepository,
+        IRecipeRepository recipeRepository,
+        IUserIngredientRepository userIngredientRepository,
+        IRecipeIngredientRepository recipeIngredientRepository,
+        IShoppingLists shoppingListsRepository
         )
     {
-        _mealRepository = mealRepository;
         _ingredientRepository = ingredientRepository;
-        _mealIngredientRepository = mealIngredientRepository;
-        _ingredientMapper = ingredientMapper;
-        _mealMapper = mealMapper;
-        _mealIngredientMapper = mealIngredientMapper;
+        _recipeRepository = recipeRepository;
+        _userIngredientRepository = userIngredientRepository;
+        _recipeIngredientRepository = recipeIngredientRepository;
+        _shoppingListsRepository = shoppingListsRepository;
     }
-    public List<MealDTO> GetAllMeals()
+    
+    public List<RecipeDTO> GetAllRecipes()
     {
-        var meals = _mealRepository.GetAllMeals(); 
-        return _mealMapper.MealToMealDTO(meals);
+        return _recipeRepository.GetAllRecipes(); 
     }
 
-    public List<Ingredient> GetAllIngredients()
+    public List<IngredientWithCategoryDTO> GetAllIngredients()
     {
         return _ingredientRepository.GetAllIngredients();
     }
 
-    public List<MealIngredients> GetMealIngredients (string mealName)
+    public void AddUserIngredients(AddUserIngredientsRequest addUserIngredientsRequest)
     {
-        return _mealIngredientRepository.GetMealIngredients(mealName);
-    }
+        var userId = addUserIngredientsRequest.UserId;
+        var userIngredients = _userIngredientRepository.GetUserIngredients(userId);
+        var userIngredientsDict = userIngredients.ToDictionary(i => i.IngredientId);
 
-    public List<RequiredIngredient> GetIngredientsList(List<string> mealNames)
-    {
-        List<IngredientAndMealIngredient> mealIngredients = _mealIngredientRepository.GetMealIngredients(mealNames);
-
-        Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary =
-            GetIngredientsListAsDictionary(mealIngredients);
-
-        List<RequiredIngredient> finalIngredientsList = GetFinalIngredientsList(ingredientsListAsDictionary);
-
-        return finalIngredientsList;
-    }
-
-    public void AddIngredient(AddIngredientRequest ingredientRequest)
-    {
-        Ingredient ingredient = _ingredientMapper.ToPersistence(ingredientRequest);
-        _ingredientRepository.AddIngredient(ingredient);
-    }
-
-    public void AddMeal(AddMealRequest addMealRequest)
-    {
-        Meal meal = _mealMapper.AddMealRequestToMealPersistence(addMealRequest);
-        _mealRepository.AddMeal(meal);
-        
-        List<Ingredient> ingredients = _ingredientMapper.ToPersistence(addMealRequest.MealIngredients);
-        _ingredientRepository.AddIngredients(ingredients);
-
-        List<MealIngredients> mealIngredients = _mealIngredientMapper.ToPersistance(addMealRequest);
-        _mealIngredientRepository.AddMeal(mealIngredients);
-    }
-
-    private List<RequiredIngredient> GetFinalIngredientsList(Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary)
-    {
-        List<RequiredIngredient> finalIngredientsList = new List<RequiredIngredient>();
-
-        foreach (var ingredient in ingredientsListAsDictionary.Values)
+        var newIngredients = new List<UserIngredient>();
+        foreach (var ingredient in addUserIngredientsRequest.Ingredients)
         {
-            if (ingredient.MealIngredientAmount > ingredient.KitchenIngredientAmount)
+            var ingredientId = ingredient.IngredientID;
+            if (userIngredientsDict.ContainsKey(ingredientId))
             {
-                RequiredIngredient requiredIngredient = new RequiredIngredient
-                {
-                    IngredientName = ingredient.IngredientName,
-                    RequiredIngredientAmount = ingredient.MealIngredientAmount - ingredient.KitchenIngredientAmount,
-                    MeasurementUnit = ingredient.MeasurementUnit,
-                    IngredientCategory = ingredient.IngredientCategory
-                };
-                
-                finalIngredientsList.Add(requiredIngredient);
-                
-            }
-        }
-        return finalIngredientsList.OrderBy(ingredient => ingredient.IngredientCategory).ToList();
-    }
-
-    private Dictionary<string, IngredientAndMealIngredient> GetIngredientsListAsDictionary(
-        List<IngredientAndMealIngredient> mealIngredients)
-    {
-        Dictionary<string, IngredientAndMealIngredient> ingredientsListAsDictionary = new Dictionary<string, IngredientAndMealIngredient>();
-         
-        foreach (IngredientAndMealIngredient mealIngredient in mealIngredients)
-        {
-            if (ingredientsListAsDictionary.ContainsKey(mealIngredient.IngredientName))
-            {
-                ingredientsListAsDictionary[mealIngredient.IngredientName].MealIngredientAmount +=
-                    mealIngredient.MealIngredientAmount;
+                userIngredientsDict[ingredientId].Quantity += ingredient.Quantity;
             }
             else
             {
-                ingredientsListAsDictionary.Add(mealIngredient.IngredientName, mealIngredient);
+                newIngredients.Add(new UserIngredient
+                {
+                    IngredientId = ingredient.IngredientID,
+                    UserId = userId,
+                    Quantity = ingredient.Quantity
+                });
             }
         }
-        return ingredientsListAsDictionary;
+        
+        _userIngredientRepository.AddUserIngredients(newIngredients);
+        _userIngredientRepository.UpdateUserIngredients(userIngredientsDict.Values.ToList());
+    }
+
+    public List<RecipeIngredientDTO> GetShoppingList(ShoppingListRequest request)
+    {
+        var recipeIngredients = _recipeIngredientRepository.GetRecipeIngredients(request.RecipeIds);
+        Dictionary<int, RecipeIngredientDTO> recipeIngredientsDictionary = new Dictionary<int, RecipeIngredientDTO>();
+        // multiple recipes can have the same ingredient which is why we need to check if the ingredient has already 
+        // been added to the dictionary
+        foreach (var ingredient in recipeIngredients)
+        {
+            int ingredientId = ingredient.IngredientId;
+            
+            if (recipeIngredientsDictionary.ContainsKey(ingredientId))
+            {
+                recipeIngredientsDictionary[ingredientId].RecipeIngredientQuantity += ingredient.RecipeIngredientQuantity;
+            }
+            else
+            {
+                recipeIngredientsDictionary[ingredientId] = ingredient;
+            }
+        }
+        
+        // we know a user cannot have multiple of the same ingredients in the 'fridge' at once
+        var userIngredients = _userIngredientRepository.GetUserIngredients(request.UserId);
+        var userIngredientsDict = userIngredients.ToDictionary(i => i.IngredientId);
+        
+        // for each ingredient in the recipe ingredients, it is assumed that the ingredient will be consumed
+        // therefore, even if the recipe ingredient is not required and doesn't make it onto the list, the amount of the ingredient
+        // in the userIngredients table needs to be updated.
+        foreach (var recipeIngredient in recipeIngredientsDictionary)
+        {
+            int ingredientId = recipeIngredient.Key;
+            if (userIngredientsDict.ContainsKey(ingredientId))
+            {
+                recipeIngredient.Value.RecipeIngredientQuantity -=
+                    userIngredientsDict[ingredientId].Quantity;
+
+                userIngredientsDict[ingredientId].Quantity -=
+                    recipeIngredient.Value.RecipeIngredientQuantity;
+            }
+        }
+        
+        List<RecipeIngredientDTO> shoppingList = new List<RecipeIngredientDTO>();
+        var databaseShoppingList = new ShoppingList
+        {
+            GeneratedDate = DateTime.UtcNow,
+            UserId = request.UserId,
+            ShoppingListItems = new List<ShoppingListItem>(),
+        };
+        
+        foreach (var ingredient in recipeIngredientsDictionary.Values)
+        {
+            if (ingredient.RecipeIngredientQuantity > 0)
+            {
+                shoppingList.Add(ingredient);
+                databaseShoppingList.ShoppingListItems.Add(new ShoppingListItem
+                {
+                    IngredientId = ingredient.IngredientId,
+                    RequiredQuantity = ingredient.RecipeIngredientQuantity
+                });
+            }
+        }
+        _shoppingListsRepository.SaveShoppingList(databaseShoppingList);
+        return shoppingList;
     }
 }

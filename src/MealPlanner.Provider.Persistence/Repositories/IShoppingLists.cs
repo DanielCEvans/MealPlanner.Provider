@@ -2,8 +2,7 @@ using MealPlanner.Provider.Persistence.Models;
 
 namespace MealPlanner.Provider.Persistence.Repositories;
 
-public interface IMealRepository
+public interface IShoppingLists
 {
-    public List<Meal> GetAllMeals();
-    public void AddMeal(Meal meal);
+    public void SaveShoppingList(ShoppingList shoppingList);
 }

@@ -3,6 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Provider.Persistence.Repositories;
 
+public class IngredientWithCategoryDTO
+{
+    public int IngredientId { get; set; }
+    public string IngredientName { get; set; }
+    public string Unit { get; set; }
+    public string CategoryName { get; set; }
+}
+
 public class IngredientRepository : IIngredientRepository
 {
     private readonly MealPlannerContext _dbContext;
@@ -12,9 +20,20 @@ public class IngredientRepository : IIngredientRepository
         _dbContext = dbContext;
     }
 
-    public List<Ingredient> GetAllIngredients()
+    public List<IngredientWithCategoryDTO> GetAllIngredients()
     {
-        return _dbContext.Ingredients.ToList();
+        var ingredientsWithCategories = _dbContext.Ingredients
+            .Include(i => i.Category)
+            .Select(i => new IngredientWithCategoryDTO
+            {
+                IngredientId = i.IngredientId,
+                IngredientName = i.IngredientName,
+                Unit = i.Unit,
+                CategoryName = i.Category.CategoryName
+            })
+            .ToList();
+            
+        return ingredientsWithCategories;
     }
 
     public void AddIngredient(Ingredient ingredient)

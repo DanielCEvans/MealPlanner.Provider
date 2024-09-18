@@ -1,8 +1,8 @@
 using System.Net;
 using MealPlanner.Provider.Endpoint.Models;
-using MealPlanner.Provider.Endpoint.Models.DTOs;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
+using MealPlanner.Provider.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealPlanner.Provider.Endpoint.Controllers;
@@ -18,55 +18,31 @@ public class MealPlannerControllerImplementation : ControllerBase
     }
 
     [HttpGet]
-    [Route("meals")]
-    public List<MealDTO> GetAllMeals()
+    [Route("recipes")]
+    public List<RecipeDTO> GetAllRecipes()
     {
-        return _mealPlannerService.GetAllMeals();
-    }
-    
-    [HttpGet]
-    [Route("meals/{mealName}")]
-    public List<MealIngredients> GetMeal(string mealName)
-    {
-        return _mealPlannerService.GetMealIngredients(mealName);
+        return _mealPlannerService.GetAllRecipes();
     }
 
     [HttpPost]
-    [Route("meals")]
-    public List<RequiredIngredient> GetIngredientsList([FromBody] GetIngredientsListRequest request)
+    [Route("shopping-list")]
+    public List<RecipeIngredientDTO> GetShoppingList([FromBody] ShoppingListRequest request)
     {
-        return _mealPlannerService.GetIngredientsList(request.MealNames);
-    }
-
-    [HttpPost]
-    [Route("meals/add")]
-    public HttpStatusCode AddMeal([FromBody] AddMealRequest request)
-    {
-        try
-        {
-            _mealPlannerService.AddMeal(request);
-        }
-        catch (Microsoft.EntityFrameworkCore.DbUpdateException)
-        {
-            // TODO: if the meal already exists, return bad request 
-            return HttpStatusCode.Conflict;
-        }
-        
-        return HttpStatusCode.Created;
+        return _mealPlannerService.GetShoppingList(request);
     }
     
     [HttpGet]
     [Route("ingredients")]
-    public List<Ingredient> GetAllIngredients()
+    public List<IngredientWithCategoryDTO> GetAllIngredients()
     {
         return _mealPlannerService.GetAllIngredients();
     }
 
     [HttpPost]
-    [Route("ingredients")]
-    public HttpStatusCode AddIngredient([FromBody] AddIngredientRequest request)
+    [Route("ingredients/user")]
+    public HttpStatusCode AddUserIngredients([FromBody] AddUserIngredientsRequest requests)
     {
-        _mealPlannerService.AddIngredient(request);
+        _mealPlannerService.AddUserIngredients(requests);
         return HttpStatusCode.Created;
     }
 }

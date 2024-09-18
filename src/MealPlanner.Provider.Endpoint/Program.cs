@@ -1,7 +1,7 @@
-using MealPlanner.Provider.Endpoint.Mappers;
 using MealPlanner.Provider.Endpoint.Services;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence;
+using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,12 +27,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IMealPlannerService, MealPlannerService>();
-builder.Services.AddScoped<IMealRepository, MealRepository>();
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
-builder.Services.AddScoped<IMealIngredientRepository, MealIngredientRepository>();
-builder.Services.AddScoped<IIngredientMapper, IngredientMapper>();
-builder.Services.AddScoped<IMealMapper, MealMapper>();
-builder.Services.AddScoped<IMealIngredientMapper, MealIngredientMapper>();
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+builder.Services.AddScoped<IRecipeIngredientRepository, RecipeIngredientRepository>();
+builder.Services.AddScoped<IUserIngredientRepository, UserIngredientRepository>();
+builder.Services.AddScoped<IShoppingLists, ShoppingLists>();
+// builder.Services.AddScoped<IIngredientMapper, IngredientMapper>();
+// builder.Services.AddScoped<IMealMapper, MealMapper>();
+// builder.Services.AddScoped<IMealIngredientMapper, MealIngredientMapper>();
 
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 
