@@ -12,7 +12,7 @@ public interface IMealPlannerService
     // List<MealIngredients> GetMealIngredients(string mealName);
     // List<RequiredIngredient> GetIngredientsList(List<string> mealNames);
     // void AddIngredient(AddIngredientRequest ingredientRequest);
-    void AddUserIngredient(AddUserIngredientRequest addUserIngredientRequest);
+    void AddUserIngredients(AddUserIngredientsRequest addUserIngredientsRequest);
 
     List<RecipeIngredientDTO> GetShoppingList(ShoppingListRequest request);
 }

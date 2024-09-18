@@ -6,6 +6,7 @@ public class RecipeIngredientDTO
     public string IngredientName { get; set; }
     public decimal RecipeIngredientQuantity { get; set; }
     public string IngredientCategory { get; set; }
+    public string Unit { get; set; }
 }
 
 public class RecipeIngredientRepository : IRecipeIngredientRepository
@@ -27,7 +28,8 @@ public class RecipeIngredientRepository : IRecipeIngredientRepository
                 IngredientId = ri.IngredientId,
                 IngredientName = ri.Ingredient.IngredientName,
                 RecipeIngredientQuantity = ri.Quantity,
-                IngredientCategory = ri.Ingredient.Category.CategoryName
+                IngredientCategory = ri.Ingredient.Category.CategoryName,
+                Unit = ri.Ingredient.Unit
             }).ToList();
         return recipeIngredients;
     }

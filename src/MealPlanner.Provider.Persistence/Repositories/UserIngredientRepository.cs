@@ -18,9 +18,9 @@ public class UserIngredientRepository : IUserIngredientRepository
         _dbContext = dbContext;
     }
 
-    public void AddUserIngredient(UserIngredient userIngredient)
+    public void AddUserIngredients(List<UserIngredient> userIngredients)
     {
-        _dbContext.UserIngredients.Add(userIngredient);
+        _dbContext.UserIngredients.AddRange(userIngredients);
         _dbContext.SaveChanges();
     }
 

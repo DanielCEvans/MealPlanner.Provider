@@ -38,15 +38,22 @@ public class MealPlannerService : IMealPlannerService
         return _ingredientRepository.GetAllIngredients();
     }
 
-    public void AddUserIngredient(AddUserIngredientRequest addUserIngredientRequest)
+    public void AddUserIngredients(AddUserIngredientsRequest addUserIngredientsRequest)
     {
-        var userIngredient = new UserIngredient
+        var userIngredients = new List<UserIngredient>();
+        var userId = addUserIngredientsRequest.UserId;
+        
+        foreach (var ingredient in addUserIngredientsRequest.Ingredients)
         {
-            UserId = addUserIngredientRequest.UserId,
-            IngredientId = addUserIngredientRequest.IngredientId,
-            Quantity = addUserIngredientRequest.Quantity
-        };
-        _userIngredientRepository.AddUserIngredient(userIngredient);
+            userIngredients.Add(new UserIngredient
+            {
+                UserId = userId,
+                IngredientId = ingredient.IngredientID,
+                Quantity = ingredient.Quantity
+            });
+        }
+        
+        _userIngredientRepository.AddUserIngredients(userIngredients);
     }
 
     public List<RecipeIngredientDTO> GetShoppingList(ShoppingListRequest request)

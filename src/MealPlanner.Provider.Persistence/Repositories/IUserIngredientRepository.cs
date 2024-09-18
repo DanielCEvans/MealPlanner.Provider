@@ -4,7 +4,7 @@ namespace MealPlanner.Provider.Persistence.Repositories;
 
 public interface IUserIngredientRepository
 {
-    public void AddUserIngredient(UserIngredient request);
+    public void AddUserIngredients(List<UserIngredient> userIngredients);
 
     public List<UserIngredientDTO> GetUserIngredients(int userId);
 }
