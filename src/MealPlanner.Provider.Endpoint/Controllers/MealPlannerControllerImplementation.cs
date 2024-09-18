@@ -30,37 +30,6 @@ public class MealPlannerControllerImplementation : ControllerBase
     {
         return _mealPlannerService.GetShoppingList(request);
     }
-    //
-    // [HttpGet]
-    // [Route("meals/{mealName}")]
-    // public List<MealIngredients> GetMeal(string mealName)
-    // {
-    //     return _mealPlannerService.GetMealIngredients(mealName);
-    // }
-    //
-    // [HttpPost]
-    // [Route("meals")]
-    // public List<RequiredIngredient> GetIngredientsList([FromBody] GetIngredientsListRequest request)
-    // {
-    //     return _mealPlannerService.GetIngredientsList(request.MealNames);
-    // }
-    //
-    // [HttpPost]
-    // [Route("meals/add")]
-    // public HttpStatusCode AddMeal([FromBody] AddMealRequest request)
-    // {
-    //     try
-    //     {
-    //         _mealPlannerService.AddMeal(request);
-    //     }
-    //     catch (Microsoft.EntityFrameworkCore.DbUpdateException)
-    //     {
-    //         // TODO: if the meal already exists, return bad request 
-    //         return HttpStatusCode.Conflict;
-    //     }
-    //     
-    //     return HttpStatusCode.Created;
-    // }
     
     [HttpGet]
     [Route("ingredients")]

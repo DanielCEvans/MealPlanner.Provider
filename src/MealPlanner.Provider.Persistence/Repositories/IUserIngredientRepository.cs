@@ -6,5 +6,7 @@ public interface IUserIngredientRepository
 {
     public void AddUserIngredients(List<UserIngredient> userIngredients);
 
-    public List<UserIngredientDTO> GetUserIngredients(int userId);
+    public List<UserIngredient> GetUserIngredients(int userId);
+
+    public void UpdateUserIngredients(List<UserIngredient> userIngredients);
 }

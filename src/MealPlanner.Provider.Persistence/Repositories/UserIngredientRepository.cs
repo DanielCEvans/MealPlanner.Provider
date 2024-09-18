@@ -23,16 +23,18 @@ public class UserIngredientRepository : IUserIngredientRepository
         _dbContext.UserIngredients.AddRange(userIngredients);
         _dbContext.SaveChanges();
     }
+    
+    public void UpdateUserIngredients(List<UserIngredient> userIngredients)
+    {
+        _dbContext.UserIngredients.UpdateRange(userIngredients);
+        _dbContext.SaveChanges();
+    }
 
-    public List<UserIngredientDTO> GetUserIngredients(int userId)
+    public List<UserIngredient> GetUserIngredients(int userId)
     {
         var userIngredients = _dbContext.UserIngredients
-            .Where(ui => ui.UserId == userId)
-            .Select(ui => new UserIngredientDTO
-            {
-                IngredientId = ui.IngredientId,
-                UserIngredientQuantity = ui.Quantity
-            }).ToList();
+            .Where(ui => ui.UserId == userId).ToList();
         return userIngredients;
     }
+
 }   
