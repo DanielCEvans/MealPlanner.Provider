@@ -32,10 +32,17 @@ public class MealPlannerControllerImplementation : ControllerBase
     }
     
     [HttpGet]
-    [Route("ingredients")]
+    [Route("ingredients/all")]
     public List<IngredientWithCategoryDTO> GetAllIngredients()
     {
         return _mealPlannerService.GetAllIngredients();
+    }
+    
+    [HttpGet]
+    [Route("ingredients/user")]
+    public List<UserIngredientInfoDTO> GetUserIngredients([FromQuery] int userId)
+    {
+        return _mealPlannerService.GetUserIngredientsAndIngredientInfo(userId);
     }
 
     [HttpPost]

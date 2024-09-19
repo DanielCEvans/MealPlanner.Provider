@@ -8,6 +8,7 @@ public interface IMealPlannerService
 {
     List<RecipeDTO> GetAllRecipes();
     List<IngredientWithCategoryDTO> GetAllIngredients();
+    List<UserIngredientInfoDTO> GetUserIngredientsAndIngredientInfo(int userId);
     void AddUserIngredients(AddUserIngredientsRequest addUserIngredientsRequest);
 
     List<RecipeIngredientDTO> GetShoppingList(ShoppingListRequest request);
