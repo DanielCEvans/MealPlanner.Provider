@@ -28,7 +28,7 @@ public class MealPlannerContext : DbContext
 
         // IngredientCategory configuration
         modelBuilder.Entity<IngredientCategory>()
-            .HasIndex(e => e.CategoryName).IsUnique();
+            .HasIndex(e => e.Name).IsUnique();
 
         // UserIngredient configuration
         modelBuilder.Entity<UserIngredient>()

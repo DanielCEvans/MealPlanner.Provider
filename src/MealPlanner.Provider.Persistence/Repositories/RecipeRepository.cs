@@ -4,9 +4,9 @@ namespace MealPlanner.Provider.Persistence.Repositories;
 
 public class RecipeDTO
 {
-    public int RecipeId { get; set; }
-    public string RecipeName { get; set; }
-    public string RecipeDescription { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
 }
 
 public class RecipeRepository : IRecipeRepository
@@ -22,9 +22,9 @@ public class RecipeRepository : IRecipeRepository
     {
         return _dbContext.Recipes.Select(r => new RecipeDTO
         {
-            RecipeId = r.RecipeId,
-            RecipeName = r.RecipeName,
-            RecipeDescription = r.Description
+            Id = r.Id,
+            Name = r.Name,
+            Description = r.Description
         }).ToList();
     }
 }

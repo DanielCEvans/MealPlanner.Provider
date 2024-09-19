@@ -5,8 +5,8 @@ namespace MealPlanner.Provider.Persistence.Repositories;
 
 public class UserIngredientInfoDTO
 {
-    public int IngredientId { get; set; }
-    public string IngredientName { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
     public string Unit { get; set; }
     public string CategoryName { get; set; }
     public decimal Quantity { get; set; }
@@ -42,15 +42,15 @@ public class UserIngredientRepository : IUserIngredientRepository
     public List<UserIngredientInfoDTO> GetUserIngredientsAndIngredientInfo(int userId)
     {
         var userIngredients = (from ui in _dbContext.UserIngredients
-            join i in _dbContext.Ingredients on ui.IngredientId equals i.IngredientId
-            join ic in _dbContext.IngredientCategories on i.CategoryId equals ic.CategoryId
+            join i in _dbContext.Ingredients on ui.IngredientId equals i.Id
+            join ic in _dbContext.IngredientCategories on i.CategoryId equals ic.Id
             where ui.UserId == userId
             select new UserIngredientInfoDTO()
             {
-                IngredientId = i.IngredientId,
-                IngredientName = i.IngredientName,
+                Id = i.Id,
+                Name = i.Name,
                 Unit = i.Unit,
-                CategoryName = ic.CategoryName,
+                CategoryName = ic.Name,
                 Quantity = ui.Quantity
             }).ToList();
         return userIngredients;

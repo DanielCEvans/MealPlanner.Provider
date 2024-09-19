@@ -26,9 +26,9 @@ public class RecipeIngredientRepository : IRecipeIngredientRepository
             {
                 RecipeId = ri.RecipeId,
                 IngredientId = ri.IngredientId,
-                IngredientName = ri.Ingredient.IngredientName,
+                IngredientName = ri.Ingredient.Name,
                 RecipeIngredientQuantity = ri.Quantity,
-                IngredientCategory = ri.Ingredient.Category.CategoryName,
+                IngredientCategory = ri.Ingredient.Category.Name,
                 Unit = ri.Ingredient.Unit
             }).ToList();
         return recipeIngredients;
