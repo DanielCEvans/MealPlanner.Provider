@@ -7,11 +7,11 @@ namespace MealPlanner.Provider.Persistence.Models;
 public class Ingredient
 {
     [Key]
-    public int IngredientId { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [MaxLength(255)]
-    public string IngredientName { get; set; }
+    public string Name { get; set; }
 
     [Required]
     [MaxLength(50)]

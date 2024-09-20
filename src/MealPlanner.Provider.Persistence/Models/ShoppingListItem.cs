@@ -7,7 +7,7 @@ namespace MealPlanner.Provider.Persistence.Models;
 public class ShoppingListItem
 {
     [Key]
-    public int ShoppingListItemId { get; set; }
+    public int Id { get; set; }
 
     public int ShoppingListId { get; set; }
     public int IngredientId { get; set; }

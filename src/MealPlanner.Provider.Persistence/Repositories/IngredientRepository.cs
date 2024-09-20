@@ -5,10 +5,10 @@ namespace MealPlanner.Provider.Persistence.Repositories;
 
 public class IngredientWithCategoryDTO
 {
-    public int IngredientId { get; set; }
-    public string IngredientName { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
     public string Unit { get; set; }
-    public string CategoryName { get; set; }
+    public string Category { get; set; }
 }
 
 public class IngredientRepository : IIngredientRepository
@@ -26,10 +26,10 @@ public class IngredientRepository : IIngredientRepository
             .Include(i => i.Category)
             .Select(i => new IngredientWithCategoryDTO
             {
-                IngredientId = i.IngredientId,
-                IngredientName = i.IngredientName,
+                Id = i.Id,
+                Name = i.Name,
                 Unit = i.Unit,
-                CategoryName = i.Category.CategoryName
+                Category = i.Category.Name
             })
             .ToList();
             

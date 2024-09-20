@@ -37,6 +37,10 @@ public class MealPlannerService : IMealPlannerService
     {
         return _ingredientRepository.GetAllIngredients();
     }
+    public List<UserIngredientInfoDTO> GetUserIngredientsAndIngredientInfo(int userId)
+    {
+        return _userIngredientRepository.GetUserIngredientsAndIngredientInfo(userId);
+    }
 
     public void AddUserIngredients(AddUserIngredientsRequest addUserIngredientsRequest)
     {
@@ -128,6 +132,9 @@ public class MealPlannerService : IMealPlannerService
             }
         }
         _shoppingListsRepository.SaveShoppingList(databaseShoppingList);
+        
+        // Do I need to update the userIngredients table at this point?
+        // Or should i wait until the user has confirmed they have cooked the recipes?
         return shoppingList;
     }
 }
