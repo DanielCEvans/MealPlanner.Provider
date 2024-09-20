@@ -1,7 +1,6 @@
 using System.Net;
 using MealPlanner.Provider.Endpoint.Models;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
-using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,6 +41,7 @@ public class MealPlannerControllerImplementation : ControllerBase
     [Route("ingredients/user")]
     public List<UserIngredientInfoDTO> GetUserIngredients([FromQuery] int userId)
     {
+        
         return _mealPlannerService.GetUserIngredientsAndIngredientInfo(userId);
     }
 
