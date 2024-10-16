@@ -111,9 +111,11 @@ public class MealPlannerService : IMealPlannerService
             int ingredientId = recipeIngredient.Key;
             if (userIngredientsDict.ContainsKey(ingredientId))
             {
+                // subtract user ingredient amount from recipe ingredient amount
                 recipeIngredient.Value.RecipeIngredientQuantity -=
                     userIngredientsDict[ingredientId].Quantity;
-
+                
+                // update the user ingredients to reflect amount consumed which will be saved to the database
                 userIngredientsDict[ingredientId].Quantity -=
                     recipeIngredient.Value.RecipeIngredientQuantity;
             }
