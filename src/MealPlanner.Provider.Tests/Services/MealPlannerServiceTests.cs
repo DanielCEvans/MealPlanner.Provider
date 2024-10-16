@@ -39,25 +39,26 @@ public class MealPlannerServiceTests
     }
 
     [Fact]
-    public void GetShoppingListShouldReturnEmptyListWhenNoIngredientsRequried()
+    public void GetShoppingListShouldReturnEmptyListWhenNoIngredientsRequired()
     {
         this.Given(x => GivenAGetShoppingListRequest())
-            .And(x => GivenRecipeIngredients())
-            .And(x => GivenUserIngredients())
+            .And(x => GivenRecipeIngredients(10, 10))
+            .And(x => GivenUserIngredients(50, 50))
             .When(x => WhenGetShoppingListIsCalled())
             .Then(x => ThenItShouldReturnAnEmptyList())
             .BDDfy();
     }
     
-    // [Fact]
-    // public void GetShoppingListShouldReturnOnlyIngredientsRequried()
-    // {
-    //     this.Given(x => GivenAGetShoppingListRequest())
-    //         .And(x => GivenSomeMealIngredientsAreGreaterThanKitchenIngredients())
-    //         .When(x => WhenGetShoppingListIsCalled())
-    //         .Then(x => ThenItShouldReturnTheIngredientsList())
-    //         .BDDfy();
-    // }
+    [Fact]
+    public void GetShoppingListShouldReturnOnlyIngredientsRequiredAndRequiredAmounts()
+    {
+        this.Given(x => GivenAGetShoppingListRequest())
+            .And(x => GivenRecipeIngredients(50, 50 ))
+            .And(x => GivenUserIngredients(10, 100))
+            .When(x => WhenGetShoppingListIsCalled())
+            .Then(x => ThenItShouldReturnTheShoppingList())
+            .BDDfy();
+    }
 
     private void GivenAGetShoppingListRequest()
     {
@@ -68,36 +69,7 @@ public class MealPlannerServiceTests
         };
     }
     
-    // private void GivenSomeMealIngredientsAreGreaterThanKitchenIngredients()
-    // {
-    //     List<IngredientAndMealIngredient> ingredients =
-    //     [
-    //         new()
-    //         {
-    //             IngredientName = "some ingredient",
-    //             MealIngredientAmount = 100,
-    //             KitchenIngredientAmount = 50,
-    //         },
-    //
-    //         new()
-    //         {
-    //             IngredientName = "another ingredient",
-    //             MealIngredientAmount = 20,
-    //             KitchenIngredientAmount = 50,
-    //         },
-    //
-    //         new()
-    //         {
-    //             IngredientName = "some ingredient",
-    //             MealIngredientAmount = 20,
-    //             KitchenIngredientAmount = 50,
-    //         }
-    //     ];
-    //
-    //     _mealIngredientRepository.GetMealIngredients(MealNames).Returns(ingredients);
-    // }
-    
-    private void GivenRecipeIngredients()
+    private void GivenRecipeIngredients(int quantityA, int quantityB)
     {
         List<RecipeIngredientDTO> recipeIngredients =
         [
@@ -105,33 +77,33 @@ public class MealPlannerServiceTests
             {
                 RecipeId = 1,
                 IngredientId = 1,
-                RecipeIngredientQuantity = 10
+                RecipeIngredientQuantity = quantityA
             },
 
             new RecipeIngredientDTO
             {
                 RecipeId = 1,
                 IngredientId = 2,
-                RecipeIngredientQuantity = 20
+                RecipeIngredientQuantity = quantityB
             },
         ];
 
         _recipeIngredientRepository.GetRecipeIngredients(_request.RecipeIds).Returns(recipeIngredients);
     }
-    private void GivenUserIngredients()
+    private void GivenUserIngredients(int quantityA, int quantityB)
     {
         List<UserIngredient> userIngredients =
         [
             new UserIngredient
             {
                 IngredientId = 1,
-                Quantity = 50
+                Quantity = quantityA
             },
         
             new UserIngredient
             {
                 IngredientId = 2,
-                Quantity = 50
+                Quantity = quantityB
             }
         ];
         
@@ -142,12 +114,12 @@ public class MealPlannerServiceTests
         _result = _subject.GetShoppingList(_request);
     }
 
-    // private void ThenItShouldReturnTheIngredientsList()
-    // {
-    //     _result.ShouldNotBeEmpty();
-    //     _result.Count.ShouldBe(1);
-    //     _result[0].RequiredIngredientAmount.ShouldBe(70);
-    // }
+    private void ThenItShouldReturnTheShoppingList()
+    {
+        _result.ShouldNotBeEmpty();
+        _result.Count.ShouldBe(1);
+        _result[0].RecipeIngredientQuantity.ShouldBe(40);
+    }
     
     private void ThenItShouldReturnAnEmptyList()
     {
