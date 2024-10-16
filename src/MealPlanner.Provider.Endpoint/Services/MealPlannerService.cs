@@ -44,6 +44,14 @@ public class MealPlannerService : IMealPlannerService
 
     public void AddUserIngredients(AddUserIngredientsRequest addUserIngredientsRequest)
     {
+        // At the moment, the application will come preconfigured with a host of regular ingredients
+        // This endpoint/method is meant for when a user has gone shopping and is needing to update their ingredient inventory
+        
+        // The logic here is stating:
+        // Get all the user ingredients currently in 'fridge', for each ingredient in the request, check if it is in the 
+        // fridge already, if so, update the quantity, else, add this ingredient to the database (unsure if this is
+        // best practice/ how this will work in the frontend)
+        
         var userId = addUserIngredientsRequest.UserId;
         var userIngredients = _userIngredientRepository.GetUserIngredients(userId);
         var userIngredientsDict = userIngredients.ToDictionary(i => i.IngredientId);
