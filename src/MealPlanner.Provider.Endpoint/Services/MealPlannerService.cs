@@ -59,7 +59,7 @@ public class MealPlannerService : IMealPlannerService
         var newIngredients = new List<UserIngredient>();
         foreach (var ingredient in addUserIngredientsRequest.Ingredients)
         {
-            var ingredientId = ingredient.IngredientID;
+            var ingredientId = ingredient.Id;
             if (userIngredientsDict.ContainsKey(ingredientId))
             {
                 userIngredientsDict[ingredientId].Quantity += ingredient.Quantity;
@@ -68,7 +68,7 @@ public class MealPlannerService : IMealPlannerService
             {
                 newIngredients.Add(new UserIngredient
                 {
-                    IngredientId = ingredient.IngredientID,
+                    IngredientId = ingredient.Id,
                     UserId = userId,
                     Quantity = ingredient.Quantity
                 });

@@ -2,7 +2,7 @@ namespace MealPlanner.Provider.Endpoint.Models;
 
 public class Ingredient
 {
-    public int IngredientID { get; set; }
+    public int Id { get; set; }
     public int Quantity { get; set; }
 }
 
