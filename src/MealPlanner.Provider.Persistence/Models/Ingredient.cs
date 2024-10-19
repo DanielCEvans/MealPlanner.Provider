@@ -21,6 +21,8 @@ public class Ingredient
 
     [ForeignKey("CategoryId")]
     public IngredientCategory Category { get; set; }
+    
+    public int? GramsPerCup { get; set; }
 
     public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
     public ICollection<UserIngredient> UserIngredients { get; set; }

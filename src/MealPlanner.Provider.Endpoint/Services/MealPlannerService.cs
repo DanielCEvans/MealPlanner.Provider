@@ -1,7 +1,9 @@
+using MealPlanner.Provider.Endpoint.Helpers;
 using MealPlanner.Provider.Endpoint.Models;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
+using RecipeIngredient = MealPlanner.Provider.Persistence.Models.RecipeIngredient;
 
 namespace MealPlanner.Provider.Endpoint.Services;
 
@@ -33,6 +35,45 @@ public class MealPlannerService : IMealPlannerService
         return _recipeRepository.GetAllRecipes(); 
     }
 
+    public void AddRecipe(AddRecipeRequest request)
+    {
+        Recipe recipe = new Recipe()
+        {
+            Name = request.Name,
+            Description = request.Description,
+            RecipeIngredients = new List<RecipeIngredient>()
+        };
+        
+        var converter = new UnitConverter();
+        foreach (var ingredient in request.RecipeIngredients)
+        {
+            // convert database string to MeasurementUnit enum
+            // TODO: this will fail if ingredient in database is singular e.g. chicken thighs
+            var databaseUnit = (MeasurementUnit) Enum.Parse(typeof(MeasurementUnit), ingredient.DatabaseUnit);
+
+            if (databaseUnit == ingredient.RecipeUnit)
+            {
+                continue;
+            }  
+            
+            if (databaseUnit == MeasurementUnit.gm && ingredient.RecipeUnit == MeasurementUnit.cup) {
+                ingredient.Amount *= ingredient.GramsPerCup;
+            } else {
+                // TODO: can the keys for the dictionary be done in a better way?
+                ingredient.Amount = converter.Convert($"{ingredient.RecipeUnit} - {ingredient.DatabaseUnit}", ingredient.Amount);
+            }
+
+            RecipeIngredient ri = new RecipeIngredient()
+            {
+                IngredientId = ingredient.IngredientId,
+                Quantity = ingredient.Amount
+            };
+            recipe.RecipeIngredients.Add(ri);
+        }
+
+        _recipeRepository.AddRecipe(recipe);
+    }
+
     public List<IngredientWithCategoryDTO> GetAllIngredients()
     {
         return _ingredientRepository.GetAllIngredients();
@@ -42,7 +83,7 @@ public class MealPlannerService : IMealPlannerService
         return _userIngredientRepository.GetUserIngredientsAndIngredientInfo(userId);
     }
 
-    public void AddUserIngredients(AddUserIngredientsRequest addUserIngredientsRequest)
+    public void AddUserIngredients(AddUserIngredientsRequest request)
     {
         // At the moment, the application will come preconfigured with a host of regular ingredients
         // This endpoint/method is meant for when a user has gone shopping and is needing to update their ingredient inventory
@@ -52,12 +93,12 @@ public class MealPlannerService : IMealPlannerService
         // fridge already, if so, update the quantity, else, add this ingredient to the database (unsure if this is
         // best practice/ how this will work in the frontend)
         
-        var userId = addUserIngredientsRequest.UserId;
+        var userId = request.UserId;
         var userIngredients = _userIngredientRepository.GetUserIngredients(userId);
         var userIngredientsDict = userIngredients.ToDictionary(i => i.IngredientId);
 
         var newIngredients = new List<UserIngredient>();
-        foreach (var ingredient in addUserIngredientsRequest.Ingredients)
+        foreach (var ingredient in request.Ingredients)
         {
             var ingredientId = ingredient.Id;
             if (userIngredientsDict.ContainsKey(ingredientId))

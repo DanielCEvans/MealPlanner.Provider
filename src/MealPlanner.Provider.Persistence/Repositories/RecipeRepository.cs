@@ -27,4 +27,10 @@ public class RecipeRepository : IRecipeRepository
             Description = r.Description
         }).ToList();
     }
+
+    public void AddRecipe(Recipe recipe)
+    {
+        _dbContext.Recipes.Add(recipe);
+        _dbContext.SaveChanges();
+    }
 }

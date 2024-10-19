@@ -2,58 +2,58 @@ namespace MealPlanner.Provider.Endpoint.Helpers;
 
 public class UnitConverter
 {
-    private readonly Dictionary<string, Func<int, int>> _conversionDictionary;
+    private readonly Dictionary<string, Func<decimal, int>> _conversionDictionary;
     
     public UnitConverter()
     {
-        _conversionDictionary = new Dictionary<string, Func<int, int>>
+        _conversionDictionary = new Dictionary<string, Func<decimal, int>>
         {
-            { "kgs - gms", KgsToGms },
-            { "tbs - grams", TbsToGrams },
-            { "tsp - grams", TspToGrams },
-            { "lts - mls", LtsToMls },
-            { "cups - mls", CupsToMls },
-            { "tbs - mls", TbsToMls },
-            { "tsp - mls", TspToMls },
+            { "kg - g", KgToGm },
+            { "tbs - g", TbsToGm },
+            { "tsp - g", TspToGm },
+            { "l - ml", LtToMl },
+            { "cup - ml", CupToMl },
+            { "tbs - ml", TbsToMl },
+            { "tsp - ml", TspToMl },
         };
     }
     
-    private int KgsToGms(int value)
+    private int KgToGm(decimal value)
     {
-        return value * 1000;
+        return (int)Math.Round(value * 1000);
     }
     
-    private int TbsToGrams(int value)
+    private int TbsToGm(decimal value)
     {
-        return value * 15;
+        return (int)Math.Round(value * 15);
     }
     
-    private int TspToGrams(int value)
+    private int TspToGm(decimal value)
     {
-        return value * 5;
+        return (int)Math.Round(value * 5);
     }
     
-    private int LtsToMls(int value)
+    private int LtToMl(decimal value)
     {
-        return value * 1000;
+        return (int)Math.Round(value * 1000);
     }
 
-    private int CupsToMls(int value)
+    private int CupToMl(decimal value)
     {
-        return value * 250;
+        return (int)Math.Round(value * 250);
     }
     
-    private int TbsToMls(int value)
+    private int TbsToMl(decimal value)
     {
-        return value * 15;
+        return (int)Math.Round(value * 15);
     }
     
-    private int TspToMls(int value)
+    private int TspToMl(decimal value)
     {
-        return value * 5;
+        return (int)Math.Round(value * 5);
     }
 
-    public int Convert(string fromToUnit, int value)
+    public int Convert(string fromToUnit, decimal value)
     {
         return _conversionDictionary[fromToUnit](value);
     }
