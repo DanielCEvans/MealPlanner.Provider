@@ -122,7 +122,6 @@ public class MealPlannerService : IMealPlannerService
 
     public void AddIngredients(AddIngredientRequest request)
     {
-        // Need to validate that if the unit is 'gm' that the grams per cup value is not null
         Ingredient i = new Ingredient()
         {
             Name = request.Name,

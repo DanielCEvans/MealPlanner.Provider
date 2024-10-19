@@ -63,9 +63,15 @@ public class MealPlannerControllerImplementation : ControllerBase
     
     [HttpPost]
     [Route("ingredients")]
-    public HttpStatusCode AddIngredient([FromBody] AddIngredientRequest request)
+    public IActionResult AddIngredient([FromBody] AddIngredientRequest request)
     {
+        if (request is { Unit: "gm", GramsPerCup: null })
+        {
+            var response = "If ingredient is in grams, please specify the number of grams in a cup";
+            return BadRequest(response);
+        }
+        
         _mealPlannerService.AddIngredients(request);
-        return HttpStatusCode.Created;
+        return StatusCode((int)HttpStatusCode.Created);
     }
 }
