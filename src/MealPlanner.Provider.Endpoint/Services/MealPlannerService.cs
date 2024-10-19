@@ -3,6 +3,7 @@ using MealPlanner.Provider.Endpoint.Models;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
+using Ingredient = MealPlanner.Provider.Persistence.Models.Ingredient;
 using RecipeIngredient = MealPlanner.Provider.Persistence.Models.RecipeIngredient;
 
 namespace MealPlanner.Provider.Endpoint.Services;
@@ -70,7 +71,6 @@ public class MealPlannerService : IMealPlannerService
             };
             recipe.RecipeIngredients.Add(ri);
         }
-
         _recipeRepository.AddRecipe(recipe);
     }
 
@@ -118,6 +118,19 @@ public class MealPlannerService : IMealPlannerService
         
         _userIngredientRepository.AddUserIngredients(newIngredients);
         _userIngredientRepository.UpdateUserIngredients(userIngredientsDict.Values.ToList());
+    }
+
+    public void AddIngredients(AddIngredientRequest request)
+    {
+        // Need to validate that if the unit is 'gm' that the grams per cup value is not null
+        Ingredient i = new Ingredient()
+        {
+            Name = request.Name,
+            Unit = request.Unit,
+            CategoryId = request.CategoryId,
+            GramsPerCup = request.GramsPerCup
+        };
+        _ingredientRepository.AddIngredient(i);
     }
 
     public List<RecipeIngredientDTO> GetShoppingList(ShoppingListRequest request)

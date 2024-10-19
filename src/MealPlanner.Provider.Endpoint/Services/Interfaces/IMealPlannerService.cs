@@ -14,4 +14,6 @@ public interface IMealPlannerService
     List<RecipeIngredientDTO> GetShoppingList(ShoppingListRequest request);
 
     void AddRecipe(AddRecipeRequest request);
+
+    void AddIngredients(AddIngredientRequest request);
 }

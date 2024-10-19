@@ -55,9 +55,17 @@ public class MealPlannerControllerImplementation : ControllerBase
 
     [HttpPost]
     [Route("ingredients/user")]
-    public HttpStatusCode AddUserIngredients([FromBody] AddUserIngredientsRequest requests)
+    public HttpStatusCode AddUserIngredients([FromBody] AddUserIngredientsRequest request)
     {
-        _mealPlannerService.AddUserIngredients(requests);
+        _mealPlannerService.AddUserIngredients(request);
+        return HttpStatusCode.Created;
+    }
+    
+    [HttpPost]
+    [Route("ingredients")]
+    public HttpStatusCode AddIngredient([FromBody] AddIngredientRequest request)
+    {
+        _mealPlannerService.AddIngredients(request);
         return HttpStatusCode.Created;
     }
 }
