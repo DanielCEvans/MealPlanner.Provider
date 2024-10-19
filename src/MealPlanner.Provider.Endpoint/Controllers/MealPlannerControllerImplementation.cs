@@ -70,6 +70,12 @@ public class MealPlannerControllerImplementation : ControllerBase
             var response = "If ingredient is in grams, please specify the number of grams in a cup";
             return BadRequest(response);
         }
+
+        if (request.CategoryId == 0)
+        {
+            var response = "Category Id must be specified";
+            return BadRequest(response);
+        }
         
         _mealPlannerService.AddIngredients(request);
         return StatusCode((int)HttpStatusCode.Created);
