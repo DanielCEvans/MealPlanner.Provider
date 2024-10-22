@@ -57,8 +57,7 @@ public class MealPlannerService : IMealPlannerService
             if (ingredient is { DatabaseUnit: DatabaseMeasurementUnit.gm, RecipeUnit: RecipeMeasurementUnit.cup }) {
                 ingredient.Amount *= ingredient.GramsPerCup;
             } else {
-                // TODO: can the keys for the dictionary be done in a better way?
-                ingredient.Amount = converter.Convert($"{ingredient.RecipeUnit} - {ingredient.DatabaseUnit}", ingredient.Amount);
+                ingredient.Amount = converter.Convert($"{ingredient.RecipeUnit.ToString()} - {ingredient.DatabaseUnit.ToString()}", ingredient.Amount);
             }
 
             RecipeIngredient ri = new RecipeIngredient()
