@@ -20,20 +20,22 @@ public class MealPlannerContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // User configuration
         modelBuilder.Entity<User>()
             .HasIndex(e => e.Username).IsUnique();
         modelBuilder.Entity<User>()
             .HasIndex(e => e.Email).IsUnique();
 
-        // IngredientCategory configuration
         modelBuilder.Entity<IngredientCategory>()
             .HasIndex(e => e.Name).IsUnique();
 
-        // UserIngredient configuration
         modelBuilder.Entity<UserIngredient>()
             .HasIndex(ui => new { ui.UserId, ui.IngredientId })
             .IsUnique();
+
+        modelBuilder.Entity<Ingredient>()
+            .Property(i => i.Unit)
+            .HasConversion<string>();
+
     }
         
 }

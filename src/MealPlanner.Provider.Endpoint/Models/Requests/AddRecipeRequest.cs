@@ -1,12 +1,13 @@
-using System.Text.Json.Serialization;
+using MealPlanner.Provider.Endpoint.Models.Enums;
+using MealPlanner.Provider.Persistence.Models;
 
 namespace MealPlanner.Provider.Endpoint.Models;
 
 public class RecipeIngredientRequest
 {
     public int IngredientId { get; init; }
-    public string DatabaseUnit { get; init; }
-    public MeasurementUnit RecipeUnit { get; init; }
+    public DatabaseMeasurementUnit DatabaseUnit { get; init; }
+    public RecipeMeasurementUnit RecipeUnit { get; init; }
     public decimal Amount { get; set; }
     public int GramsPerCup { get; set; }
 }
@@ -18,15 +19,5 @@ public class AddRecipeRequest
     public List<RecipeIngredientRequest> RecipeIngredients { get; init; }
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
-public enum MeasurementUnit
-{
-    kg,
-    gm,
-    l,
-    ml,
-    cup,
-    tbs,
-    tsp
-}
+
 

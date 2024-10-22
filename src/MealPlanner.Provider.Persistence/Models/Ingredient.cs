@@ -7,24 +7,31 @@ namespace MealPlanner.Provider.Persistence.Models;
 public class Ingredient
 {
     [Key]
-    public int Id { get; set; }
+    public int Id { get; init; }
 
     [Required]
     [MaxLength(255)]
-    public string Name { get; set; }
+    public string Name { get; init; }
 
     [Required]
-    [MaxLength(50)]
-    public string Unit { get; set; }
+    public DatabaseMeasurementUnit Unit { get; init; }
 
-    public int CategoryId { get; set; }
+    public int CategoryId { get; init; }
 
     [ForeignKey("CategoryId")]
-    public IngredientCategory Category { get; set; }
+    public IngredientCategory Category { get; init; }
     
-    public int? GramsPerCup { get; set; }
+    public int? GramsPerCup { get; init; }
 
-    public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
-    public ICollection<UserIngredient> UserIngredients { get; set; }
-    public ICollection<ShoppingListItem> ShoppingListItems { get; set; }
+    public ICollection<RecipeIngredient> RecipeIngredients { get; init; }
+    public ICollection<UserIngredient> UserIngredients { get; init; }
+    public ICollection<ShoppingListItem> ShoppingListItems { get; init; }
+    
+}
+
+public enum DatabaseMeasurementUnit
+{
+    gm,
+    ml,
+    singular
 }

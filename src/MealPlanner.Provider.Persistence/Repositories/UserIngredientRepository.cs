@@ -7,7 +7,7 @@ public class UserIngredientInfoDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Unit { get; set; }
+    public DatabaseMeasurementUnit Unit { get; set; }
     public string CategoryName { get; set; }
     public decimal Quantity { get; set; }
 }

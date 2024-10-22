@@ -1,6 +1,8 @@
 using System.Net;
 using MealPlanner.Provider.Endpoint.Models;
+using MealPlanner.Provider.Endpoint.Models.Enums;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
+using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +29,8 @@ public class MealPlannerControllerImplementation : ControllerBase
     [Route("recipes")]
     public HttpStatusCode AddRecipe([FromBody] AddRecipeRequest request)
     {
+        // TODO: validation?!
+        
         _mealPlannerService.AddRecipe(request);
         return HttpStatusCode.Created;
     }
@@ -65,7 +69,7 @@ public class MealPlannerControllerImplementation : ControllerBase
     [Route("ingredients")]
     public IActionResult AddIngredient([FromBody] AddIngredientRequest request)
     {
-        if (request is { Unit: "gm", GramsPerCup: null })
+        if (request is { Unit: DatabaseMeasurementUnit.gm, GramsPerCup: null })
         {
             var response = "If ingredient is in grams, please specify the number of grams in a cup";
             return BadRequest(response);

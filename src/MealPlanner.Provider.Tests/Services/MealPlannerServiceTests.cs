@@ -1,4 +1,5 @@
 using MealPlanner.Provider.Endpoint.Models;
+using MealPlanner.Provider.Endpoint.Models.Enums;
 using MealPlanner.Provider.Endpoint.Services;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
@@ -21,6 +22,7 @@ public class MealPlannerServiceTests
         
     private List<RecipeIngredientDTO> _result;
     private ShoppingListRequest _request;
+    private AddRecipeRequest _addRecipeRequest;
 
     public MealPlannerServiceTests()
     {
@@ -60,6 +62,43 @@ public class MealPlannerServiceTests
             .BDDfy();
     }
 
+    [Fact]
+    public void ItShouldConvertUnitMeasurementsIfRequried()
+    {
+        this.Given(x => GivenAddRecipeRequest())
+            .When(x => WhenAddRecipeIsCalled())
+            .Then(x => ThenRecipeIngredientsMeasurementUnitsShoudlBeConverted())
+            .BDDfy();
+    }
+
+    private void GivenAddRecipeRequest()
+    {
+        List<RecipeIngredientRequest> recipeIngredients = new List<RecipeIngredientRequest>()
+        {
+            new RecipeIngredientRequest
+            {
+                IngredientId = 1,
+                DatabaseUnit = DatabaseMeasurementUnit.gm
+            }
+        };
+        _addRecipeRequest = new AddRecipeRequest()
+        {
+            Name = "Test Recipe",
+            Description = "Some Description",
+            RecipeIngredients = recipeIngredients
+        };
+    }
+
+    private void WhenAddRecipeIsCalled()
+    {
+        _subject.AddRecipe(_addRecipeRequest);
+    }
+
+    private void ThenRecipeIngredientsMeasurementUnitsShoudlBeConverted()
+    {
+        // assert measurement values
+    }
+    
     private void GivenAGetShoppingListRequest()
     {
         _request = new ShoppingListRequest
@@ -125,6 +164,5 @@ public class MealPlannerServiceTests
     {
         _result.ShouldBeEmpty();
     }
-
 
 }

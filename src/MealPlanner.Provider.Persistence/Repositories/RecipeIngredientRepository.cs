@@ -1,3 +1,5 @@
+using MealPlanner.Provider.Persistence.Models;
+
 namespace MealPlanner.Provider.Persistence.Repositories;
 public class RecipeIngredientDTO
 {
@@ -6,7 +8,7 @@ public class RecipeIngredientDTO
     public string IngredientName { get; set; }
     public decimal RecipeIngredientQuantity { get; set; }
     public string IngredientCategory { get; set; }
-    public string Unit { get; set; }
+    public DatabaseMeasurementUnit Unit { get; set; }
 }
 
 public class RecipeIngredientRepository : IRecipeIngredientRepository

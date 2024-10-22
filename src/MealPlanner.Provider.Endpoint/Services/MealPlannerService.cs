@@ -1,5 +1,6 @@
 using MealPlanner.Provider.Endpoint.Helpers;
 using MealPlanner.Provider.Endpoint.Models;
+using MealPlanner.Provider.Endpoint.Models.Enums;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
@@ -48,16 +49,12 @@ public class MealPlannerService : IMealPlannerService
         var converter = new UnitConverter();
         foreach (var ingredient in request.RecipeIngredients)
         {
-            // convert database string to MeasurementUnit enum
-            // TODO: this will fail if ingredient in database is singular e.g. chicken thighs
-            var databaseUnit = (MeasurementUnit) Enum.Parse(typeof(MeasurementUnit), ingredient.DatabaseUnit);
-
-            if (databaseUnit == ingredient.RecipeUnit)
+            if (ingredient.DatabaseUnit.ToString() == ingredient.RecipeUnit.ToString())
             {
                 continue;
             }  
             
-            if (databaseUnit == MeasurementUnit.gm && ingredient.RecipeUnit == MeasurementUnit.cup) {
+            if (ingredient is { DatabaseUnit: DatabaseMeasurementUnit.gm, RecipeUnit: RecipeMeasurementUnit.cup }) {
                 ingredient.Amount *= ingredient.GramsPerCup;
             } else {
                 // TODO: can the keys for the dictionary be done in a better way?
