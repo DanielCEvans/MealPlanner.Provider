@@ -46,6 +46,7 @@ public class MealPlannerService : IMealPlannerService
             RecipeIngredients = new List<RecipeIngredient>()
         };
         
+        // TODO: Can we remove the need for two for loops?
         var converter = new UnitConverter();
         foreach (var ingredient in request.RecipeIngredients)
         {
@@ -59,13 +60,17 @@ public class MealPlannerService : IMealPlannerService
             } else {
                 ingredient.Amount = converter.Convert($"{ingredient.RecipeUnit.ToString()} - {ingredient.DatabaseUnit.ToString()}", ingredient.Amount);
             }
-
+        }
+        
+        foreach (var i in request.RecipeIngredients)
+        {
             RecipeIngredient ri = new RecipeIngredient()
             {
-                IngredientId = ingredient.IngredientId,
-                Quantity = ingredient.Amount
+                IngredientId = i.IngredientId,
+                Quantity = i.Amount
             };
             recipe.RecipeIngredients.Add(ri);
+            
         }
         _recipeRepository.AddRecipe(recipe);
     }

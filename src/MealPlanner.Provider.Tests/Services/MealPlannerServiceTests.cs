@@ -67,20 +67,41 @@ public class MealPlannerServiceTests
     {
         this.Given(x => GivenAddRecipeRequest())
             .When(x => WhenAddRecipeIsCalled())
-            .Then(x => ThenRecipeIngredientsMeasurementUnitsShoudlBeConverted())
+            .Then(x => ThenRecipeIngredientsMeasurementUnitsShouldBeConverted())
+            .Then(x => ThenRecipeShouldBeSavedToDatabase())
             .BDDfy();
     }
 
     private void GivenAddRecipeRequest()
     {
-        List<RecipeIngredientRequest> recipeIngredients = new List<RecipeIngredientRequest>()
-        {
+        List<RecipeIngredientRequest> recipeIngredients =
+        [
             new RecipeIngredientRequest
             {
                 IngredientId = 1,
-                DatabaseUnit = DatabaseMeasurementUnit.gm
+                DatabaseUnit = DatabaseMeasurementUnit.gm,
+                RecipeUnit = RecipeMeasurementUnit.gm,
+                Amount = 10
+            },
+
+            new RecipeIngredientRequest
+            {
+                IngredientId = 2,
+                DatabaseUnit = DatabaseMeasurementUnit.gm,
+                RecipeUnit = RecipeMeasurementUnit.cup,
+                Amount = 10,
+                GramsPerCup = 90
+            },
+
+            new RecipeIngredientRequest
+            {
+                IngredientId = 3,
+                DatabaseUnit = DatabaseMeasurementUnit.gm,
+                RecipeUnit = RecipeMeasurementUnit.tbs,
+                Amount = 5
             }
-        };
+
+        ];
         _addRecipeRequest = new AddRecipeRequest()
         {
             Name = "Test Recipe",
@@ -94,9 +115,16 @@ public class MealPlannerServiceTests
         _subject.AddRecipe(_addRecipeRequest);
     }
 
-    private void ThenRecipeIngredientsMeasurementUnitsShoudlBeConverted()
+    private void ThenRecipeIngredientsMeasurementUnitsShouldBeConverted()
     {
-        // assert measurement values
+        _addRecipeRequest.RecipeIngredients[0].Amount.ShouldBe(10);
+        _addRecipeRequest.RecipeIngredients[1].Amount.ShouldBe(900);
+        _addRecipeRequest.RecipeIngredients[2].Amount.ShouldBe(75);
+    }
+
+    private void ThenRecipeShouldBeSavedToDatabase()
+    {
+        _recipeRepository.Received(1).AddRecipe(Arg.Is<Recipe>(r => r.RecipeIngredients.Count == 3));
     }
     
     private void GivenAGetShoppingListRequest()

@@ -8,9 +8,9 @@ public class UnitConverter
     {
         _conversionDictionary = new Dictionary<string, Func<decimal, int>>
         {
-            { "kg - g", KgToGm },
-            { "tbs - g", TbsToGm },
-            { "tsp - g", TspToGm },
+            { "kg - gm", KgToGm },
+            { "tbs - gm", TbsToGm },
+            { "tsp - gm", TspToGm },
             { "l - ml", LtToMl },
             { "cup - ml", CupToMl },
             { "tbs - ml", TbsToMl },
