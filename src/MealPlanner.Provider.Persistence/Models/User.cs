@@ -18,7 +18,7 @@ public class User
     public string Email { get; set; }
 
     [Required]
-    public byte[] UsernameEncoded { get; set; }
+    public byte[] Fido2Id { get; set; }
 
     public ICollection<UserIngredient> UserIngredients { get; set; }
     public ICollection<ShoppingList> ShoppingLists { get; set; }
