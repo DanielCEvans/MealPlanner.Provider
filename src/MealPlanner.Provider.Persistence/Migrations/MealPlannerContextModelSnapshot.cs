@@ -244,14 +244,14 @@ namespace MealPlanner.Provider.Persistence.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<byte[]>("Fido2Id")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<byte[]>("UsernameEncoded")
-                        .IsRequired()
-                        .HasColumnType("bytea");
 
                     b.HasKey("Id");
 

@@ -7,6 +7,27 @@ public class StoredCredentialRepository(MealPlannerContext _dbContext) : IStored
     
     public List<StoredCredential> GetCredentialsByUser(User user)
     {
-        return _dbContext.StoredCredentials.Where(c => c.UserId.SequenceEqual(user.UsernameEncoded)).ToList();
+        return _dbContext.StoredCredentials.Where(c => c.UserId.SequenceEqual(user.Fido2Id)).ToList();
     }
+
+    public void AddCredentialToUser(User user, StoredCredential credential)
+    {
+        // Is this correct?!?!
+        credential.UserId = user.Fido2Id;
+        
+        _dbContext.StoredCredentials.Add(credential);
+        _dbContext.SaveChanges();
+    }
+    
+    public Task<List<User>> GetUsersByCredentialIdAsync(byte[] credentialId, CancellationToken cancellationToken = default)
+    {
+        // our in-mem storage does not allow storing multiple users for a given credentialId. Yours shouldn't either.
+        var cred = _dbContext.StoredCredentials.FirstOrDefault(c => c.Descriptor.Id.SequenceEqual(credentialId));
+
+        if (cred is null)
+            return Task.FromResult(new List<User>());
+
+        return Task.FromResult(_dbContext.Users.Where(u => u.Fido2Id.SequenceEqual(cred.UserId)).Select(u => u).ToList());
+    }
+    
 }

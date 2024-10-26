@@ -36,8 +36,10 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
             // 1. Get user from DB by username (in our example, auto create missing users)
             var user = _userRepository.GetOrAddUser(username, () => new User
             {
+                // TODO: need to fix foreign key and username of USER model (do we need the id field?)
                 Username = username,
-                UsernameEncoded = Encoding.UTF8.GetBytes(username) // byte representation of userID is required
+                Email = "danielconnorevans@gmail.com",
+                Fido2Id = Encoding.UTF8.GetBytes(username) // byte representation of userID is required
             });
 
             // 2. Get user existing keys by username
@@ -64,7 +66,8 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
             Fido2User fidoUser = new Fido2User()
             {
                 Name = user.Username,
-                Id = user.UsernameEncoded
+                DisplayName = user.Username,
+                Id = user.Fido2Id
             };
 
             var options = _fido2.RequestNewCredential(fidoUser, existingKeys, authenticatorSelection,
@@ -79,6 +82,66 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
         catch (Exception e)
         {
             return Json(new { Status = "error", ErrorMessage = FormatException(e) });
+        }
+    }
+    
+    [HttpPost]
+    [Route("makeCredential")]
+    public async Task<JsonResult> MakeCredential([FromBody] AuthenticatorAttestationRawResponse attestationResponse, CancellationToken cancellationToken)
+    {
+        try
+        {
+            // 1. get the options we sent the client
+            var jsonOptions = HttpContext.Session.GetString("fido2.attestationOptions");
+            var options = CredentialCreateOptions.FromJson(jsonOptions);
+            
+            // TODO: I removed the static keyword from the anonymous callback funtion, this might cause errors!?                        
+
+            // 2. Create callback so that lib can verify credential id is unique to this user
+            IsCredentialIdUniqueToUserAsyncDelegate callback = async (args, cancellationToken) =>
+            {
+                var users = await _storedCredentialRepository.GetUsersByCredentialIdAsync(args.CredentialId,
+                    cancellationToken);
+                if (users.Count > 0)
+                    return false;
+
+                return true;
+            };
+
+            // 2. Verify and make the credentials
+            var success = await _fido2.MakeNewCredentialAsync(attestationResponse, options, callback, cancellationToken: cancellationToken);
+
+            // TODO: is it necessary to keep swapping between Fido2 users and my users in the database?
+            User user = new User()
+            {
+                Username = options.User.Name,
+                Fido2Id = options.User.Id
+            };
+
+            // 3. Store the credentials in db
+            _storedCredentialRepository.AddCredentialToUser(user, new StoredCredential
+            {
+                Id = success.Result.Id,
+                PublicKey = success.Result.PublicKey,
+                UserHandle = success.Result.User.Id,
+                SignCount = success.Result.SignCount,
+                AttestationFormat = success.Result.AttestationFormat,
+                RegDate = DateTimeOffset.UtcNow,
+                AaGuid = success.Result.AaGuid,
+                Transports = success.Result.Transports,
+                IsBackupEligible = success.Result.IsBackupEligible,
+                IsBackedUp = success.Result.IsBackedUp,
+                AttestationObject = success.Result.AttestationObject,
+                AttestationClientDataJson = success.Result.AttestationClientDataJson,
+                DevicePublicKeys = [success.Result.DevicePublicKey]
+            });
+
+            // 4. return "ok" to the client
+            return Json(success);
+        }
+        catch (Exception e)
+        {
+            return Json(new { status = "error", errorMessage = FormatException(e) });
         }
     }
 }
