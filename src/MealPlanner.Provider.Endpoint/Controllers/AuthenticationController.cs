@@ -9,12 +9,12 @@ namespace MealPlanner.Provider.Endpoint.Controllers;
 
 [ApiController]
 [Route("api/")]
-public class AuthenticationController(IFido2 fido2, IUserRepository userRepository, IStoredCredential storedCredential)
+public class AuthenticationController(IFido2 fido2, IUserRepository userRepository, IStoredCredentialRepository storedCredentialRepository)
     : Controller
 {
     private readonly IFido2 _fido2 = fido2;
     private readonly IUserRepository _userRepository = userRepository;
-    private readonly IStoredCredential _storedCredential = storedCredential;
+    private readonly IStoredCredentialRepository _storedCredentialRepository = storedCredentialRepository;
 
     private string FormatException(Exception e)
     {
@@ -23,7 +23,7 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
     }
 
     [HttpPost]
-    [Route("/makeCredentialOptions")]
+    [Route("makeCredentialOptions")]
     public JsonResult MakeCredentialOptions([FromForm] string username,
         [FromForm] string attType,
         [FromForm] string authType,
@@ -41,7 +41,7 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
             });
 
             // 2. Get user existing keys by username
-            var existingKeys = _storedCredential.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
+            var existingKeys = _storedCredentialRepository.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
 
             // 3. Create options
             var authenticatorSelection = new AuthenticatorSelection
