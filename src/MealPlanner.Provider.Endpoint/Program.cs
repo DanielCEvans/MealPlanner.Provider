@@ -40,9 +40,6 @@ builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IRecipeIngredientRepository, RecipeIngredientRepository>();
 builder.Services.AddScoped<IUserIngredientRepository, UserIngredientRepository>();
 builder.Services.AddScoped<IShoppingLists, ShoppingLists>();
-// builder.Services.AddScoped<IIngredientMapper, IngredientMapper>();
-// builder.Services.AddScoped<IMealMapper, MealMapper>();
-// builder.Services.AddScoped<IMealIngredientMapper, MealIngredientMapper>();
 
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 

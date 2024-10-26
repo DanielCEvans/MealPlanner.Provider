@@ -18,10 +18,9 @@ public class User
     public string Email { get; set; }
 
     [Required]
-    [MaxLength(255)]
-    public string PasswordHash { get; set; }
+    public byte[] UsernameEncoded { get; set; }
 
     public ICollection<UserIngredient> UserIngredients { get; set; }
     public ICollection<ShoppingList> ShoppingLists { get; set; }
-    
+    public ICollection<StoredCredential> StoredCredentials { get; set; }
 }

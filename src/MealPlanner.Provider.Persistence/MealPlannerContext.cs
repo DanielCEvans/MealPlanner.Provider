@@ -17,6 +17,7 @@ public class MealPlannerContext : DbContext
     public DbSet<UserIngredient> UserIngredients { get; set; }
     public DbSet<ShoppingList> ShoppingLists { get; set; }
     public DbSet<ShoppingListItem> ShoppingListItems { get; set; }
+    public DbSet<StoredCredential> StoredCredentials { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

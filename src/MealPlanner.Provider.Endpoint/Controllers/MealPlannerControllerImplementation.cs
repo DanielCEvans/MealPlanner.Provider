@@ -1,6 +1,5 @@
 using System.Net;
 using MealPlanner.Provider.Endpoint.Models;
-using MealPlanner.Provider.Endpoint.Models.Enums;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
@@ -30,7 +29,6 @@ public class MealPlannerControllerImplementation : ControllerBase
     public HttpStatusCode AddRecipe([FromBody] AddRecipeRequest request)
     {
         // TODO: validation?!
-        
         _mealPlannerService.AddRecipe(request);
         return HttpStatusCode.Created;
     }
