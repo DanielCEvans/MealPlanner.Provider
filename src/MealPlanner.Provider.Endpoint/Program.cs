@@ -29,7 +29,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddFido2(options =>
 {
     options.ServerDomain = builder.Configuration["fido2:serverDomain"];
-    options.ServerName = "FIDO Dan";
+    options.ServerName = "Meal Planner";
     options.Origins = builder.Configuration.GetSection("fido2:origins").Get<HashSet<string>>();
     options.TimestampDriftTolerance = builder.Configuration.GetValue<int>("fido2:timestampDriftTolerance");
     options.BackupEligibleCredentialPolicy =
