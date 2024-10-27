@@ -33,6 +33,9 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
 
         try
         {
+            var sessionId = HttpContext.Session.Id;
+            Console.WriteLine($"Session ID: {sessionId}");
+            
             // 1. Get user from DB by username (in our example, auto create missing users)
             var user = _userRepository.GetOrAddUser(username, () => new User
             {
@@ -91,6 +94,9 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
     {
         try
         {
+            var sessionId = HttpContext.Session.Id;
+            Console.WriteLine($"Session ID: {sessionId}");
+            
             // 1. get the options we sent the client
             var jsonOptions = HttpContext.Session.GetString("fido2.attestationOptions");
             var options = CredentialCreateOptions.FromJson(jsonOptions);

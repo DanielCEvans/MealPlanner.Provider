@@ -17,12 +17,15 @@ builder.Services.AddSession(options =>
 {
     // Set a short timeout for easy testing.
     options.IdleTimeout = TimeSpan.FromMinutes(2);
+    options.Cookie.Name = ".YourApp.Session";
     options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
     // Strict SameSite mode is required because the default mode used
     // by ASP.NET Core 3 isn't understood by the Conformance Tool
     // and breaks conformance testing
-    options.Cookie.SameSite = SameSiteMode.Unspecified;
+    options.Cookie.SameSite = SameSiteMode.Lax;
 });
+
 builder.Services.AddFido2(options =>
 {
     options.ServerDomain = builder.Configuration["fido2:serverDomain"];
@@ -45,6 +48,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://localhost:4200")
+                .AllowCredentials()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });
@@ -53,6 +57,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://localhost:3001")
+                .AllowCredentials()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });
