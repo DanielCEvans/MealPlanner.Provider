@@ -36,6 +36,13 @@ public class MealPlannerContext : DbContext
         modelBuilder.Entity<Ingredient>()
             .Property(i => i.Unit)
             .HasConversion<string>();
+        
+        modelBuilder.Entity<StoredCredential>(builder =>
+        {
+            // Ignore the Descriptor property
+            builder.Ignore(c => c.Descriptor);
+        });
+        
 
     }
         
