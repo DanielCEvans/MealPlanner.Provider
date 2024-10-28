@@ -197,6 +197,10 @@ namespace MealPlanner.Provider.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("bytea[]");
 
+                    b.Property<byte[]>("Fido2Id")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
                     b.Property<bool>("IsBackedUp")
                         .HasColumnType("boolean");
 
@@ -221,16 +225,9 @@ namespace MealPlanner.Provider.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<byte[]>("UserId")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<int>("UserId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("Fido2Id");
 
                     b.ToTable("StoredCredentials");
                 });
@@ -357,13 +354,14 @@ namespace MealPlanner.Provider.Persistence.Migrations
 
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.StoredCredential", b =>
                 {
-                    b.HasOne("MealPlanner.Provider.Persistence.Models.User", "User")
+                    b.HasOne("MealPlanner.Provider.Persistence.Models.User", "user")
                         .WithMany("StoredCredentials")
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("Fido2Id")
+                        .HasPrincipalKey("Fido2Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.UserIngredient", b =>

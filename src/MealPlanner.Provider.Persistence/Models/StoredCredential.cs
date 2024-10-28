@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Fido2NetLib.Objects;
 
 namespace MealPlanner.Provider.Persistence.Models;
@@ -48,7 +49,7 @@ public class StoredCredential
 
     public List<byte[]> DevicePublicKeys { get; set; }
 
-    public byte[] UserId { get; set; }
+    public byte[] Fido2Id { get; set; }
 
     /// <summary>
     /// Exposes a Descriptor Object for this credential, used as input to the library for certain operations.
@@ -63,5 +64,5 @@ public class StoredCredential
 
     public Guid AaGuid { get; set; }
     
-    public User User { get; set; }
+    public User user { get; set; }
 }

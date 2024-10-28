@@ -25,4 +25,10 @@ public class UserRepository(MealPlannerContext _dbContext) : IUserRepository
 
         return user;
     }
+
+    public User GetUser(string username)
+    {
+        var user = _dbContext.Users.FirstOrDefault(u => u.Username == username);
+        return user;
+    }
 }

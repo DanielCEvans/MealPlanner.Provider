@@ -5,4 +5,5 @@ namespace MealPlanner.Provider.Persistence.Repositories;
 public interface IUserRepository
 {
     public User GetOrAddUser(string username, Func<User> addCallback);
+    public User GetUser(string username);
 }

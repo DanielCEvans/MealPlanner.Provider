@@ -101,7 +101,7 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
             var jsonOptions = HttpContext.Session.GetString("fido2.attestationOptions");
             var options = CredentialCreateOptions.FromJson(jsonOptions);
             
-            // TODO: I removed the static keyword from the anonymous callback funtion, this might cause errors!?                        
+            // TODO: I removed the static keyword from the anonymous callback funtion, this might cause errors!?   
 
             // 2. Create callback so that lib can verify credential id is unique to this user
             IsCredentialIdUniqueToUserAsyncDelegate callback = async (args, cancellationToken) =>
@@ -123,7 +123,7 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
                 Username = options.User.Name,
                 Fido2Id = options.User.Id
             };
-
+            
             // 3. Store the credentials in db
             _storedCredentialRepository.AddCredentialToUser(user, new StoredCredential
             {
@@ -139,7 +139,8 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
                 IsBackedUp = success.Result.IsBackedUp,
                 AttestationObject = success.Result.AttestationObject,
                 AttestationClientDataJson = success.Result.AttestationClientDataJson,
-                DevicePublicKeys = [success.Result.DevicePublicKey]
+                DevicePublicKeys = [success.Result.DevicePublicKey],
+                Descriptor = new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PublicKey, success.Result.Id, success.Result.Transports)
             });
 
             // 4. return "ok" to the client

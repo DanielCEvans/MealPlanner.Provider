@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MealPlanner.Provider.Persistence.Migrations
 {
     [DbContext(typeof(MealPlannerContext))]
-    [Migration("20241027052732_MakeDescriptorNotMappedOnStoredCredential")]
-    partial class MakeDescriptorNotMappedOnStoredCredential
+    [Migration("20241028195937_MatchFido2UserIDAcrossUsersAndStoredCredentials")]
+    partial class MatchFido2UserIDAcrossUsersAndStoredCredentials
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,9 +192,17 @@ namespace MealPlanner.Provider.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
+                    b.Property<string>("Descriptor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<List<byte[]>>("DevicePublicKeys")
                         .IsRequired()
                         .HasColumnType("bytea[]");
+
+                    b.Property<byte[]>("Fido2Id")
+                        .IsRequired()
+                        .HasColumnType("bytea");
 
                     b.Property<bool>("IsBackedUp")
                         .HasColumnType("boolean");
@@ -220,16 +228,9 @@ namespace MealPlanner.Provider.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<byte[]>("UserId")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<int>("UserId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("Fido2Id");
 
                     b.ToTable("StoredCredentials");
                 });
@@ -356,13 +357,14 @@ namespace MealPlanner.Provider.Persistence.Migrations
 
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.StoredCredential", b =>
                 {
-                    b.HasOne("MealPlanner.Provider.Persistence.Models.User", "User")
+                    b.HasOne("MealPlanner.Provider.Persistence.Models.User", "user")
                         .WithMany("StoredCredentials")
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("Fido2Id")
+                        .HasPrincipalKey("Fido2Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("MealPlanner.Provider.Persistence.Models.UserIngredient", b =>
