@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Fido2NetLib.Objects;
 
 namespace MealPlanner.Provider.Persistence.Models;
@@ -52,17 +51,9 @@ public class StoredCredential
     public byte[] UserId { get; set; }
 
     /// <summary>
-    /// Exposes an Descriptor Object for this credential, used as input to the library for certain operations.
+    /// Exposes a Descriptor Object for this credential, used as input to the library for certain operations.
     /// </summary>
-    [NotMapped]
-    public PublicKeyCredentialDescriptor Descriptor
-    {
-        get => new PublicKeyCredentialDescriptor(
-            PublicKeyCredentialType.PublicKey, 
-            Id, 
-            Transports
-        );
-    }
+    public PublicKeyCredentialDescriptor Descriptor { get; set; }
 
     public byte[] UserHandle { get; set; }
 

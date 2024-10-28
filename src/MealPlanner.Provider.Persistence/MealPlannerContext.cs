@@ -1,5 +1,7 @@
+using Fido2NetLib.Objects;
 using MealPlanner.Provider.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace MealPlanner.Provider.Persistence;
 
@@ -36,14 +38,12 @@ public class MealPlannerContext : DbContext
         modelBuilder.Entity<Ingredient>()
             .Property(i => i.Unit)
             .HasConversion<string>();
-        
-        modelBuilder.Entity<StoredCredential>(builder =>
-        {
-            // Ignore the Descriptor property
-            builder.Ignore(c => c.Descriptor);
-        });
-        
 
+        modelBuilder.Entity<StoredCredential>()
+            .Property(c => c.Descriptor)
+            .HasConversion(
+                v => JsonConvert.SerializeObject(v, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
+                v => JsonConvert.DeserializeObject<PublicKeyCredentialDescriptor>(v, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
     }
         
 }

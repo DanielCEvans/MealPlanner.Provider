@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MealPlanner.Provider.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MealPlanner.Provider.Persistence.Migrations
 {
     [DbContext(typeof(MealPlannerContext))]
-    partial class MealPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20241027060227_RevertStoredCredentialChange")]
+    partial class RevertStoredCredentialChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,10 +191,6 @@ namespace MealPlanner.Provider.Persistence.Migrations
                     b.Property<byte[]>("AttestationObject")
                         .IsRequired()
                         .HasColumnType("bytea");
-
-                    b.Property<string>("Descriptor")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<List<byte[]>>("DevicePublicKeys")
                         .IsRequired()
