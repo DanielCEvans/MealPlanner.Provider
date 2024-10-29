@@ -39,7 +39,6 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
             // 1. Get user from DB by username (in our example, auto create missing users)
             var user = _userRepository.GetOrAddUser(username, () => new User
             {
-                // TODO: need to fix foreign key and username of USER model (do we need the id field?)
                 Username = username,
                 Email = "danielconnorevans@gmail.com",
                 Fido2Id = Encoding.UTF8.GetBytes(username) // byte representation of userID is required
@@ -140,7 +139,6 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
                 AttestationObject = success.Result.AttestationObject,
                 AttestationClientDataJson = success.Result.AttestationClientDataJson,
                 DevicePublicKeys = [success.Result.DevicePublicKey],
-                Descriptor = new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PublicKey, success.Result.Id, success.Result.Transports)
             });
 
             // 4. return "ok" to the client

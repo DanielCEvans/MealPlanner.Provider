@@ -40,12 +40,6 @@ public class MealPlannerContext : DbContext
             .HasConversion<string>();
 
         modelBuilder.Entity<StoredCredential>()
-            .Property(c => c.Descriptor)
-            .HasConversion(
-                v => JsonConvert.SerializeObject(v, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
-                v => JsonConvert.DeserializeObject<PublicKeyCredentialDescriptor>(v, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
-        
-        modelBuilder.Entity<StoredCredential>()
             .HasOne(sc => sc.user)
             .WithMany(u => u.StoredCredentials)
             .HasForeignKey(sc => sc.Fido2Id)

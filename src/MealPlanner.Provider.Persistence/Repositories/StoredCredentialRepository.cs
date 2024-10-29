@@ -1,4 +1,5 @@
 using MealPlanner.Provider.Persistence.Models;
+using Fido2NetLib.Objects;
 
 namespace MealPlanner.Provider.Persistence.Repositories;
 
@@ -7,7 +8,8 @@ public class StoredCredentialRepository(MealPlannerContext _dbContext) : IStored
     
     public List<StoredCredential> GetCredentialsByUser(User user)
     {
-        return _dbContext.StoredCredentials.Where(c => c.Fido2Id.SequenceEqual(user.Fido2Id)).ToList();
+        var credentials = _dbContext.StoredCredentials.Where(c => c.Fido2Id.SequenceEqual(user.Fido2Id)).ToList();
+        return credentials;
     }
 
     public void AddCredentialToUser(User user, StoredCredential credential)
