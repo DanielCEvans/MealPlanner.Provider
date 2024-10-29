@@ -1,7 +1,5 @@
-using Fido2NetLib.Objects;
 using MealPlanner.Provider.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace MealPlanner.Provider.Persistence;
 
