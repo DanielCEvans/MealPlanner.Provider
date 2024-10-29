@@ -149,4 +149,50 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
             return Json(new { status = "error", errorMessage = FormatException(e) });
         }
     }
+    
+    [HttpPost]
+    [Route("assertionOptions")]
+    public ActionResult AssertionOptionsPost([FromForm] string username, [FromForm] string userVerification)
+    {
+        try
+        {
+            var existingCredentials = new List<PublicKeyCredentialDescriptor>();
+
+            if (!string.IsNullOrEmpty(username))
+            {
+                // 1. Get user from DB
+                var user = _userRepository.GetUser(username) ?? throw new ArgumentException("Username was not registered");
+
+                // 2. Get registered credentials from database
+                existingCredentials = _storedCredentialRepository.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
+            }
+
+            var exts = new AuthenticationExtensionsClientInputs()
+            {
+                Extensions = true,
+                UserVerificationMethod = true,
+                DevicePubKey = new AuthenticationExtensionsDevicePublicKeyInputs()
+            };
+
+            // 3. Create options
+            var uv = string.IsNullOrEmpty(userVerification) ? UserVerificationRequirement.Discouraged : userVerification.ToEnum<UserVerificationRequirement>();
+            var options = _fido2.GetAssertionOptions(
+                existingCredentials,
+                uv,
+                exts
+            );
+
+            // 4. Temporarily store options, session/in-memory cache/redis/db
+            HttpContext.Session.SetString("fido2.assertionOptions", options.ToJson());
+
+            // 5. Return options to client
+            return Json(options);
+        }
+
+        catch (Exception e)
+        {
+            return Json(new { Status = "error", ErrorMessage = FormatException(e) });
+        }
+    }
+    
 }
