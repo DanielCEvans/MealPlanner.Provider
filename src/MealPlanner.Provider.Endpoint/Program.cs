@@ -2,7 +2,6 @@ using Fido2NetLib;
 using MealPlanner.Provider.Endpoint.Services;
 using MealPlanner.Provider.Endpoint.Services.Interfaces;
 using MealPlanner.Provider.Persistence;
-using MealPlanner.Provider.Persistence.Models;
 using MealPlanner.Provider.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 

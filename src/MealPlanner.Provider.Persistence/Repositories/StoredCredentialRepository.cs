@@ -31,5 +31,21 @@ public class StoredCredentialRepository(MealPlannerContext _dbContext) : IStored
 
         return Task.FromResult(_dbContext.Users.Where(u => u.Fido2Id.SequenceEqual(cred.Fido2Id)).Select(u => u).ToList());
     }
+
+    public StoredCredential? GetCredentialById(byte[] id)
+    {
+        return _dbContext.StoredCredentials.FirstOrDefault(c => c.Id == id);
+    }
     
+    public Task<List<StoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(_dbContext.StoredCredentials.Where(c => c.UserHandle.SequenceEqual(userHandle)).ToList());
+    }
+    
+    public void UpdateCounter(byte[] credentialId, uint counter)
+    {
+        var cred = _dbContext.StoredCredentials.First(c => c.Id.SequenceEqual(credentialId));
+        cred.SignCount = counter;
+        _dbContext.SaveChanges();
+    }
 }

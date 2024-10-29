@@ -156,6 +156,9 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
     {
         try
         {
+            var sessionId = HttpContext.Session.Id;
+            Console.WriteLine($"Session ID: {sessionId}");
+            
             var existingCredentials = new List<PublicKeyCredentialDescriptor>();
 
             if (!string.IsNullOrEmpty(username))
@@ -189,6 +192,50 @@ public class AuthenticationController(IFido2 fido2, IUserRepository userReposito
             return Json(options);
         }
 
+        catch (Exception e)
+        {
+            return Json(new { Status = "error", ErrorMessage = FormatException(e) });
+        }
+    }
+    
+    [HttpPost]
+    [Route("makeAssertion")]
+    public async Task<JsonResult> MakeAssertion([FromBody] AuthenticatorAssertionRawResponse clientResponse, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var sessionId = HttpContext.Session.Id;
+            Console.WriteLine($"Session ID: {sessionId}");
+            
+            // 1. Get the assertion options we sent the client
+            var jsonOptions = HttpContext.Session.GetString("fido2.assertionOptions");
+            var options = AssertionOptions.FromJson(jsonOptions);
+
+            // 2. Get registered credential from database
+            var creds = _storedCredentialRepository.GetCredentialById(clientResponse.Id) ?? throw new Exception("Unknown credentials");
+
+            // 3. Get credential counter from database
+            var storedCounter = creds.SignCount;
+
+            // 4. Create callback to check if the user handle owns the credentialId
+            IsUserHandleOwnerOfCredentialIdAsync callback = async (args, cancellationToken) =>
+            {
+                var storedCreds = await _storedCredentialRepository.GetCredentialsByUserHandleAsync(args.UserHandle, cancellationToken);
+                return storedCreds.Exists(c => c.Descriptor.Id.SequenceEqual(args.CredentialId));
+            };
+
+            // 5. Make the assertion
+            var res = await _fido2.MakeAssertionAsync(clientResponse, options, creds.PublicKey, creds.DevicePublicKeys, storedCounter, callback, cancellationToken: cancellationToken);
+
+            // 6. Store the updated counter
+            _storedCredentialRepository.UpdateCounter(res.CredentialId, res.SignCount);
+
+            if (res.DevicePublicKey is not null)
+                creds.DevicePublicKeys.Add(res.DevicePublicKey);
+
+            // 7. return OK to client
+            return Json(res);
+        }
         catch (Exception e)
         {
             return Json(new { Status = "error", ErrorMessage = FormatException(e) });

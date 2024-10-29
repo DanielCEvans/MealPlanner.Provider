@@ -10,4 +10,11 @@ public interface IStoredCredentialRepository
 
     public Task<List<User>> GetUsersByCredentialIdAsync(byte[] credentialId,
         CancellationToken cancellationToken = default);
+
+    public StoredCredential? GetCredentialById(byte[] id);
+
+    public Task<List<StoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle,
+        CancellationToken cancellationToken = default);
+
+    public void UpdateCounter(byte[] credentialId, uint counter);
 }
